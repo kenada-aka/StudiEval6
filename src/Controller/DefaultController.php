@@ -27,11 +27,11 @@ class DefaultController extends AbstractController
         $user->setIdUser(10);
         $user->setLastName("test");
         $user->setFirstName("kenada");
-/*
+
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-*/
+        //$entityManager->persist($user);
+        //$entityManager->flush();
+
 
         return $this->render('index.html.twig', [
                         'title' => 'Ma page de contact ',
