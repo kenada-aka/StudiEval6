@@ -30,12 +30,12 @@ class DefaultController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
-        //$entityManager->flush();
+        $entityManager->flush();
 
 
         return $this->render('index.html.twig', [
                         'title' => 'Ma page de contact ',
-                        //'test' => $userRepository->findAll()
+                        'test' => $userRepository->findAll()
                     ]);
 
     }
