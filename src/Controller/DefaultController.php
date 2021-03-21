@@ -24,7 +24,6 @@ class DefaultController extends AbstractController
     {
 
         $user = new User();
-        $user->setIdUser(10);
         $user->setLastName("test");
         $user->setFirstName("kenada");
 
