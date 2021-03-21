@@ -29,7 +29,7 @@ class DefaultController extends AbstractController
         $user->setFirstName("kenada");
 
         $entityManager = $this->getDoctrine()->getManager();
-        //$entityManager->persist($user);
+        $entityManager->persist($user);
         //$entityManager->flush();
 
 
