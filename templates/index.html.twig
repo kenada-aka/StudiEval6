@@ -1,0 +1,25 @@
+{# templates/index.html.twig #}
+
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>{{ title }}</title>
+
+    </head>
+
+    <body>
+
+        <h1>{{ title }}</h1>
+
+        {% for blabla in test %}
+
+            <p>ok : {{ blabla.id }} - {{ blabla.lastName }}- {{ blabla.firstName }}</p>
+
+        {% endfor %}
+
+    </body>
+
+</html>
