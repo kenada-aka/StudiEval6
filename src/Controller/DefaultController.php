@@ -22,12 +22,12 @@ class DefaultController extends AbstractController
     public function home(UserRepository $userRepository)
 
     {
-/*
+
         $user = new User();
         $user->setIdUser(10);
         $user->setLastName("test");
         $user->setFirstName("kenada");
-
+/*
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
