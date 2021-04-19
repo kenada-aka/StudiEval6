@@ -33,18 +33,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        if($this->getUser())
+        {
+            return $this->redirectToRoute('admin.home');
+        }
+        return $this->redirectToRoute('admin.home');
     }
 
     /**
@@ -52,19 +47,20 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        return $this->redirectToRoute('home');
     }
 
     /**
 
-     * @Route("/home", name="admin.property.home")
+     * @Route("/home", name="admin.home")
 
      */
-    public function home()
+    public function home(AuthenticationUtils $authenticationUtils)
     {
 
         $admins = $this->adminRepository->findAll();
 
+        $error = $authenticationUtils->getLastAuthenticationError();
 /*
         $user = new User();
         $user->setLastName("test");
@@ -75,11 +71,11 @@ class SecurityController extends AbstractController
         $entityManager->flush();
 */
         
-        
+
 
         return $this->render('home/home.html.twig', [
                         'title' => 'Accueil',
-                        'error' => null,
+                       'error' => $error,
                         //'test' => $userRepository->findAll()
                         'admins' => $admins
                         

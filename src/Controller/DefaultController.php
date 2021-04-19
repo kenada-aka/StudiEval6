@@ -28,13 +28,13 @@ class DefaultController extends AbstractController
 
     /**
 
-     * @Route("/test", name="home.property.home")
+     * @Route("/", name="home")
 
      */
     public function home()
     {
 
-        $admins = $this->adminRepository->findAll();
+        //$admins = $this->adminRepository->findAll();
 
 /*
         $user = new User();
@@ -50,9 +50,7 @@ class DefaultController extends AbstractController
 
         return $this->render('home/home.html.twig', [
                         'title' => 'Accueil',
-                        'error' => null,
-                        //'test' => $userRepository->findAll()
-                        'admins' => $admins
+                        
                         
                     ]);
 
