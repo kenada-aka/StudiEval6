@@ -43,9 +43,10 @@ class DefaultController extends AbstractController
         
         
 
-        return $this->render('index.html.twig', [
-                        'title' => 'Ma page de contact ',
-                        'test' => $userRepository->findAll()
+        return $this->render('home/home.html.twig', [
+                        'title' => 'Accueil',
+                        'error' => null
+                        //'test' => $userRepository->findAll()
                         
                     ]);
 

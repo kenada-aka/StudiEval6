@@ -1,0 +1,49 @@
+
+
+<!-- ======= Top Bar ======= -->
+
+<div id="topbar" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+            
+        </div>
+        <div class="cta d-md-block">
+            <!-- Formulaire de connexion -->
+            {% include "security/login.html.twig" %}
+        </div>
+    </div>
+</div>
+
+<!-- ======= Header ======= -->
+
+<header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+         <!-- Logo -->
+            <a href="/">
+                <img src="/assets/img/logo.png" width="128" />
+            </a>
+        <!-- Barre de navigation -->
+        <nav id="navbar" class="navbar">
+            <ul>
+                {% if not app.user %}
+                    <li><a class="nav-link scrollto" href="/">Accueil</a></li>
+                {% endif %}
+                {% if app.user %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a class="nav-link scrollto" href="#">{% trans %}Gestion de toutes les locations{% endtrans %}</a></li>
+                        <li><a class="nav-link scrollto" href="#">{% trans %}Gestion des utilisateurs{% endtrans %}</a></li>
+                        <li><a class="nav-link scrollto" href="#">{% trans %}Document à supprimer{% endtrans %}</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section id="hero" class="register d-flex align-items-end">
+    <div class="carousel-item active">
+        <div>
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+</section>
