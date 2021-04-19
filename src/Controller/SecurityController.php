@@ -19,6 +19,24 @@ use App\Entity\Admin;
 use App\Form\AdminType;
 use App\Repository\AdminRepository;
 
+use App\Entity\Contact;
+use App\Form\ContactType;
+
+use App\Entity\Target;
+use App\Form\TargetType;
+
+use App\Entity\Agent;
+use App\Form\AgentType;
+
+use App\Entity\Mission;
+use App\Form\MissionType;
+
+use App\Entity\Stash;
+use App\Form\StashType;
+
+use App\Entity\Speciality;
+use App\Form\SpecialityType;
+
 class SecurityController extends AbstractController
 {
 
@@ -85,15 +103,43 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/addAdmin", name="addAdmin")
+     * @Route("/admin/add/{formName}", name="admin.add")
+     * @IsGranted("ROLE_ADMIN")
      */
-
-    public function addUser(Request $request, UserPasswordEncoderInterface $passwordEncoder)
-
+    public function add(string $formName, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $user = new Admin();
-
-        $form = $this->createForm(AdminType::class, $user);
+        switch($formName)
+        {
+            case "Admin":
+                $entity = new Admin();
+                $form = $this->createForm(AdminType::class, $entity);
+                break;
+            case "Contact":
+                $entity = new Contact();
+                $form = $this->createForm(ContactType::class, $entity);
+                break;
+            case "Target":
+                $entity = new Target();
+                $form = $this->createForm(TargetType::class, $entity);
+                break;
+            case "Agent":
+                $entity = new Agent();
+                $form = $this->createForm(AgentType::class, $entity);
+                break;
+            case "Mission":
+                $entity = new Mission();
+                $form = $this->createForm(MissionType::class, $entity);
+                break;
+            case "Stash":
+                $entity = new Stash();
+                $form = $this->createForm(StashType::class, $entity);
+                break;
+            case "Speciality":
+                $entity = new Speciality();
+                $form = $this->createForm(SpecialityType::class, $entity);
+                break;
+        }
+        
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -110,13 +156,10 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('admin.property.home');
         }
 
-        return $this->render('old/form.html.twig', [
-
-            'title' => 'Formulaire',
+        return $this->render('admin/form.html.twig', [
+            'title' => 'Ajouter un enregistrement à '. $formName,
             'form' => $form->createView()
-
         ]);
-
     }
 
     /**
@@ -126,7 +169,8 @@ class SecurityController extends AbstractController
     public function gestionAdmin()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Admin'
+            'title' => 'Gestion Admin',
+            'formName' => 'Admin'
         ]);
     }
 
@@ -137,7 +181,8 @@ class SecurityController extends AbstractController
     public function gestionContact()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Contact'
+            'title' => 'Gestion Contact',
+            'formName' => 'Contact'
         ]);
     }
 
@@ -148,7 +193,8 @@ class SecurityController extends AbstractController
     public function gestionTarget()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Target'
+            'title' => 'Gestion Target',
+            'formName' => 'Target'
         ]);
     }
 
@@ -159,7 +205,8 @@ class SecurityController extends AbstractController
     public function gestionAgent()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Agent'
+            'title' => 'Gestion Agent',
+            'formName' => 'Agent'
         ]);
     }
 
@@ -170,7 +217,8 @@ class SecurityController extends AbstractController
     public function gestionMission()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Mission'
+            'title' => 'Gestion Mission',
+            'formName' => 'Mission'
         ]);
     }
 
@@ -181,7 +229,8 @@ class SecurityController extends AbstractController
     public function gestionStash()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Stash'
+            'title' => 'Gestion Stash',
+            'formName' => 'Stash'
         ]);
     }
 
@@ -192,7 +241,8 @@ class SecurityController extends AbstractController
     public function gestionSpeciality()
     {
         return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Speciality'
+            'title' => 'Gestion Speciality',
+            'formName' => 'Speciality'
         ]);
     }
 

@@ -7,16 +7,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 class StashType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('code')
-            ->add('adress')
-            ->add('country')
-            ->add('type')
-            ->add('idMission')
+            ->add('code', TextType::class)
+            ->add('adress', TextType::class)
+            ->add('country', TextType::class)
+            ->add('type', TextType::class)
+            //->add('idMission')
         ;
     }
 
