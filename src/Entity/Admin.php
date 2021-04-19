@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=AdminRepository::class)
  */
-class Admin
+class Admin extends User
 {
     /**
      * @ORM\Id
@@ -27,11 +27,7 @@ class Admin
      */
     private $registrationDate;
 
-    /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="admin", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $idUser;
+    protected $discr = 'admin';
 
     public function getId(): ?int
     {
@@ -45,7 +41,7 @@ class Admin
 
     public function setEmail(string $email): self
     {
-        $this->mail = $email;
+        $this->email = $email;
 
         return $this;
     }
@@ -62,15 +58,6 @@ class Admin
         return $this;
     }
 
-    public function getIdUser(): ?User
-    {
-        return $this->idUser;
-    }
-
-    public function setIdUser(User $idUser): self
-    {
-        $this->idUser = $idUser;
-
-        return $this;
-    }
 }
+
+ 

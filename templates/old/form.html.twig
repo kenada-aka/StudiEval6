@@ -1,0 +1,17 @@
+
+{% extends "index.html.twig" %}
+
+{% block body %}
+
+<main id="main">
+    <section class="section">
+        <div class="container mt-4">   
+            {{ form_start(form) }}
+                {{ form_rest(form) }}
+                <div class="text-center php-email-form mt-4"><button type="submit">{% trans %}Ajouter{% endtrans %}</button></div>
+            {{ form_end(form) }}
+        </div>
+    </section>
+</main>
+
+{% endblock %}

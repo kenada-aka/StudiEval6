@@ -2,8 +2,8 @@
 
 {% if not app.user %}
     <form method="post" action="{{ path('app_login') }}" class="row align-items-center">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% if error is defined %}
+            <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
         <div class="col input-group mt-1">
             <span class="input-group-text" id="basic-addon1">
