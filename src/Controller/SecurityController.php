@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Admin;
@@ -51,9 +53,8 @@ class SecurityController extends AbstractController
     }
 
     /**
-
      * @Route("/home", name="admin.home")
-
+     * @IsGranted("ROLE_ADMIN")
      */
     public function home(AuthenticationUtils $authenticationUtils)
     {
@@ -117,4 +118,82 @@ class SecurityController extends AbstractController
         ]);
 
     }
+
+    /**
+     * @Route("/admin/gestion/admin", name="admin.gestion.admin")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionAdmin()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Admin'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/contact", name="admin.gestion.contact")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionContact()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Contact'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/target", name="admin.gestion.target")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionTarget()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Target'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/agent", name="admin.gestion.agent")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionAgent()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Agent'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/mission", name="admin.gestion.mission")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionMission()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Mission'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/stash", name="admin.gestion.stash")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionStash()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Stash'
+        ]);
+    }
+
+    /**
+     * @Route("/admin/gestion/speciality", name="admin.gestion.speciality")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionSpeciality()
+    {
+        return $this->render('admin/home.html.twig', [
+            'title' => 'Gestion Speciality'
+        ]);
+    }
+
 }

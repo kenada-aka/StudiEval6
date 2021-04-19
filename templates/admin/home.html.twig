@@ -1,0 +1,41 @@
+{% extends "index.html.twig" %}
+
+{% block body %}
+
+<main id="main">
+    <section class="section">
+        <div class="container mt-4">   
+            <h2>TEST</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if admins is defined %}
+                    {% for admin in admins %}
+                        <tr>
+                            <td>{{ admin.id }} - {{ admin.lastName }} - {{ admin.firstName }}</td>
+                            <td>
+                                <a href="{{ path('admin.home', {id: admin.id}) }}">Editer</a>
+                                <form method="POST" action="{{ path('admin.home', {id: admin.id}) }}">
+                                    <input type="hidden" name="_method" value="DELETE"/>
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ admin.id)}}"/>
+                                    <button>Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning mt-4 text-center">...</div>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

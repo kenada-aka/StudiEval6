@@ -397,8 +397,7 @@ body {
     height: 25vh;
     overflow: hidden;
     position: relative;
-    background: url("../img/security.jpg") top center;
-    background-size: cover;
+    background: url("../img/logo.png") repeat fixed 0px 0px;
     position: relative;
     margin-bottom: -90px;
     z-index: 99;
