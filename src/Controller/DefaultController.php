@@ -6,10 +6,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;                         // Permet d'utiliser les routes sans "config/routes.yaml"
-use App\Repository\UserRepository;                                      // Class UserRepository
+                                    // Class UserRepository
 
-use App\Entity\User;
-use App\Form\UserType;
+
 use Doctrine\ORM\EntityManagerInterface;
 //use Doctrine\Common\Persistence\ObjectManager;
 
@@ -20,8 +19,7 @@ class DefaultController extends AbstractController
     private $repository; 
     private $em;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $em) {
-        $this->repository = $userRepository;
+    public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
     }
 
@@ -30,7 +28,7 @@ class DefaultController extends AbstractController
      * @Route("/home", name="admin.property.home")
 
      */
-    public function home(UserRepository $userRepository)
+    public function home()
 
     {
 /*
@@ -57,7 +55,7 @@ class DefaultController extends AbstractController
      * @Route("/posts/{id}", name="admin.property.edit", methods="GET|POST")
      * @param User $user
      */
-
+/*
     public function post(User $user, int $id, Request $request)
 
     {
@@ -85,11 +83,11 @@ class DefaultController extends AbstractController
         ]);
 
     }
-
+*/
     /**
      * @Route("/addUser", name="admin.property.new")
      */
-
+/*
     public function addUser(Request $request)
 
     {
@@ -115,12 +113,12 @@ class DefaultController extends AbstractController
         ]);
 
     }
-
+*/
      /**
      * @Route("/posts/{id}", name="admin.property.delete", methods="DELETE")
      * @param User $user
      */
-
+/*
     public function delete(User $user, Request $request)
 
     {
@@ -140,5 +138,5 @@ class DefaultController extends AbstractController
         
 
     }
-
+*/
 }

@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -19,151 +20,94 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $last_name;
+    private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="json")
      */
-    private $first_name;
+    private $roles = [];
 
     /**
-     * @ORM\OneToOne(targetEntity=Contact::class, mappedBy="idUser", cascade={"persist", "remove"})
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $contact;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Target::class, mappedBy="idUser", cascade={"persist", "remove"})
-     */
-    private $target;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Agent::class, mappedBy="idUser", cascade={"persist", "remove"})
-     */
-    private $agent;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Admin::class, mappedBy="idUser", cascade={"persist", "remove"})
-     */
-    private $admin;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Guest::class, mappedBy="idUser", cascade={"persist", "remove"})
-     */
-    private $guest;
+    private $password;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLastName(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->last_name;
+        return (string) $this->username;
     }
 
-    public function setLastName(string $last_name): self
+    public function setUsername(string $username): self
     {
-        $this->last_name = $last_name;
+        $this->username = $username;
 
         return $this;
     }
 
-    public function getFirstName(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        return $this->first_name;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setFirstName(string $first_name): self
+    public function setRoles(array $roles): self
     {
-        $this->first_name = $first_name;
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getContact(): ?Contact
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->contact;
+        return (string) $this->password;
     }
 
-    public function setContact(Contact $contact): self
+    public function setPassword(string $password): self
     {
-        // set the owning side of the relation if necessary
-        if ($contact->getIdUser() !== $this) {
-            $contact->setIdUser($this);
-        }
-
-        $this->contact = $contact;
+        $this->password = $password;
 
         return $this;
     }
 
-    public function getTarget(): ?Target
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
     {
-        return $this->target;
+        return null;
     }
 
-    public function setTarget(Target $target): self
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        // set the owning side of the relation if necessary
-        if ($target->getIdUser() !== $this) {
-            $target->setIdUser($this);
-        }
-
-        $this->target = $target;
-
-        return $this;
-    }
-
-    public function getAgent(): ?Agent
-    {
-        return $this->agent;
-    }
-
-    public function setAgent(Agent $agent): self
-    {
-        // set the owning side of the relation if necessary
-        if ($agent->getIdUser() !== $this) {
-            $agent->setIdUser($this);
-        }
-
-        $this->agent = $agent;
-
-        return $this;
-    }
-
-    public function getAdmin(): ?Admin
-    {
-        return $this->admin;
-    }
-
-    public function setAdmin(Admin $admin): self
-    {
-        // set the owning side of the relation if necessary
-        if ($admin->getIdUser() !== $this) {
-            $admin->setIdUser($this);
-        }
-
-        $this->admin = $admin;
-
-        return $this;
-    }
-
-    public function getGuest(): ?Guest
-    {
-        return $this->guest;
-    }
-
-    public function setGuest(Guest $guest): self
-    {
-        // set the owning side of the relation if necessary
-        if ($guest->getIdUser() !== $this) {
-            $guest->setIdUser($this);
-        }
-
-        $this->guest = $guest;
-
-        return $this;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
