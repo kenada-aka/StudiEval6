@@ -142,18 +142,41 @@ class SecurityController extends AbstractController
         
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted() && $form->isValid())
+        {
+            // Règles métiers
 
-            // Encode the password
-
-            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
-
-            $user->setPassword($password);
-            $user->setRegistrationDate(new \DateTime());
-
+            switch($formName)
+            {
+                case "Admin":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    $entity->setRegistrationDate(new \DateTime());
+                    break;
+                case "Contact":
+                    
+                    break;
+                case "Target":
+                    
+                    break;
+                case "Agent":
+                    
+                    break;
+                case "Mission":
+                    
+                    break;
+                case "Stash":
+                    
+                    break;
+                case "Speciality":
+                    
+                    break;
+            }
+            /*
             $this->em->persist($user);
             $this->em->flush();
-            return $this->redirectToRoute('admin.property.home');
+            */
+            return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
         }
 
         return $this->render('admin/form.html.twig', [
