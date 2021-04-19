@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=AgentRepository::class)
  */
-class Agent
+class Agent extends Guest
 {
     /**
      * @ORM\Id
@@ -25,12 +25,6 @@ class Agent
     private $codeId;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="agent", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $idUser;
-
-    /**
      * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="idAgent")
      */
     private $specialities;
@@ -39,6 +33,8 @@ class Agent
      * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="agent")
      */
     private $idSpeciality;
+
+    protected $discr = 'agent';
 
     public function __construct()
     {

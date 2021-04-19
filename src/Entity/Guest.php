@@ -7,8 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=GuestRepository::class)
+ * @ORM\Table(name="`guest`")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"guest" = "Guest" , "contact" = "Contact", "target" = "Target", "agent" = "Agent"})
  */
-class Guest
+class Guest extends User
 {
     /**
      * @ORM\Id
@@ -27,11 +31,7 @@ class Guest
      */
     private $nationality;
 
-    /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="guest", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $idUser;
+    protected $discr = 'guest';
 
     public function getId(): ?int
     {
@@ -62,15 +62,4 @@ class Guest
         return $this;
     }
 
-    public function getIdUser(): ?User
-    {
-        return $this->idUser;
-    }
-
-    public function setIdUser(User $idUser): self
-    {
-        $this->idUser = $idUser;
-
-        return $this;
-    }
 }

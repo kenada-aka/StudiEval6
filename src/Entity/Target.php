@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TargetRepository::class)
  */
-class Target
+class Target extends Guest
 {
     /**
      * @ORM\Id
@@ -22,17 +22,13 @@ class Target
      */
     private $codeName;
 
-   /**
-     * @ORM\OneToOne(targetEntity=Guest::class, inversedBy="contact", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $idGuest;
-
     /**
      * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="contact", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $idMission;
+
+    protected $discr = 'target';
     
     public function getId(): ?int
     {

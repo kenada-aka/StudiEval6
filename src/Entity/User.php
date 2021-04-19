@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="`user`")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"user" = "User" , "admin" = "Admin"})
+ * @ORM\DiscriminatorMap({"user" = "User" , "admin" = "Admin", "guest" = "Guest"})
  */
 
 class User implements UserInterface
