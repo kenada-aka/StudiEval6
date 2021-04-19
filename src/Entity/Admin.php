@@ -20,12 +20,7 @@ class Admin
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $mail;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
+    private $email;
 
     /**
      * @ORM\Column(type="datetime")
@@ -43,26 +38,14 @@ class Admin
         return $this->id;
     }
 
-    public function getMail(): ?string
+    public function getEmail(): ?string
     {
-        return $this->mail;
+        return $this->email;
     }
 
-    public function setMail(string $mail): self
+    public function setEmail(string $email): self
     {
-        $this->mail = $mail;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+        $this->mail = $email;
 
         return $this;
     }

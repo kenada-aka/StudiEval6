@@ -30,6 +30,16 @@ class User implements UserInterface
     private $roles = [];
 
     /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $firstname;
+
+    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
@@ -109,5 +119,29 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getLastname(): string
+    {
+        return (string) $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getFirstname(): string
+    {
+        return (string) $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
     }
 }

@@ -22,17 +22,23 @@ class Target
      */
     private $codeName;
 
-    /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="target", cascade={"persist", "remove"})
+   /**
+     * @ORM\OneToOne(targetEntity=Guest::class, inversedBy="contact", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $idUser;
+    private $idGuest;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="contact", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $idMission;
+    
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    
     public function getCodeName(): ?string
     {
         return $this->codeName;
@@ -45,14 +51,26 @@ class Target
         return $this;
     }
 
-    public function getIdUser(): ?User
+    public function getIdGuest(): ?Guest
     {
-        return $this->idUser;
+        return $this->idGuest;
     }
 
-    public function setIdUser(User $idUser): self
+    public function setIdGuest(User $idGuest): self
     {
-        $this->idUser = $idUser;
+        $this->idGuest = $idGuest;
+
+        return $this;
+    }
+
+    public function getIdMission(): ?Mission
+    {
+        return $this->idMission;
+    }
+
+    public function setIdMission(Mission $idMission): self
+    {
+        $this->idMission = $idMission;
 
         return $this;
     }

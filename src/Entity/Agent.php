@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AgentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +29,22 @@ class Agent
      * @ORM\JoinColumn(nullable=false)
      */
     private $idUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="idAgent")
+     */
+    private $specialities;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="agent")
+     */
+    private $idSpeciality;
+
+    public function __construct()
+    {
+        $this->specialities = new ArrayCollection();
+        $this->idSpeciality = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -53,6 +71,66 @@ class Agent
     public function setIdUser(User $idUser): self
     {
         $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Speciality[]
+     */
+    public function getSpecialities(): Collection
+    {
+        return $this->specialities;
+    }
+
+    public function addSpeciality(Speciality $speciality): self
+    {
+        if (!$this->specialities->contains($speciality)) {
+            $this->specialities[] = $speciality;
+            $speciality->setIdAgent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpeciality(Speciality $speciality): self
+    {
+        if ($this->specialities->removeElement($speciality)) {
+            // set the owning side to null (unless already changed)
+            if ($speciality->getIdAgent() === $this) {
+                $speciality->setIdAgent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Speciality[]
+     */
+    public function getIdSpeciality(): Collection
+    {
+        return $this->idSpeciality;
+    }
+
+    public function addIdSpeciality(Speciality $idSpeciality): self
+    {
+        if (!$this->idSpeciality->contains($idSpeciality)) {
+            $this->idSpeciality[] = $idSpeciality;
+            $idSpeciality->setAgent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdSpeciality(Speciality $idSpeciality): self
+    {
+        if ($this->idSpeciality->removeElement($idSpeciality)) {
+            // set the owning side to null (unless already changed)
+            if ($idSpeciality->getAgent() === $this) {
+                $idSpeciality->setAgent(null);
+            }
+        }
 
         return $this;
     }
