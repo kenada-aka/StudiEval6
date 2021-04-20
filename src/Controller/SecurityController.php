@@ -82,8 +82,7 @@ class SecurityController extends AbstractController
 
         return $this->render('home/home.html.twig', [
             'title' => 'Accueil',
-            'error' => $error,
-            'admins' => $admins
+            'error' => $error
         ]);
     }
 
