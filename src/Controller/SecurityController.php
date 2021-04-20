@@ -76,30 +76,15 @@ class SecurityController extends AbstractController
      */
     public function home(AuthenticationUtils $authenticationUtils)
     {
-
-        $admins = $this->adminRepository->findAll();
-
-        $error = $authenticationUtils->getLastAuthenticationError();
-/*
-        $user = new User();
-        $user->setLastName("test");
-        $user->setFirstName("kenada");
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-*/
         
 
+        $error = $authenticationUtils->getLastAuthenticationError();
 
         return $this->render('home/home.html.twig', [
-                        'title' => 'Accueil',
-                       'error' => $error,
-                        //'test' => $userRepository->findAll()
-                        'admins' => $admins
-                        
-                    ]);
-
+            'title' => 'Accueil',
+            'error' => $error,
+            'admins' => $admins
+        ]);
     }
 
     /**
@@ -191,9 +176,15 @@ class SecurityController extends AbstractController
      */
     public function gestionAdmin()
     {
+        $datas = $this->adminRepository->findAll();
+        $headers = ["ID", "Nom", "Prénom"];
+        $properties = ["id", "lastName", "firstName"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Admin',
-            'formName' => 'Admin'
+            'formName' => 'Admin',
+            'datas' => $datas,
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -203,9 +194,13 @@ class SecurityController extends AbstractController
      */
     public function gestionContact()
     {
+        $headers = ["ID", "Nom", "Prénom"];
+        $properties = ["id", "lastName", "firstName"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Contact',
-            'formName' => 'Contact'
+            'formName' => 'Contact',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -215,9 +210,13 @@ class SecurityController extends AbstractController
      */
     public function gestionTarget()
     {
+        $headers = ["ID", "Nom", "Prénom"];
+        $properties = ["id", "lastName", "firstName"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Target',
-            'formName' => 'Target'
+            'formName' => 'Target',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -227,9 +226,13 @@ class SecurityController extends AbstractController
      */
     public function gestionAgent()
     {
+        $headers = ["ID", "Nom", "Prénom"];
+        $properties = ["id", "lastName", "firstName"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Agent',
-            'formName' => 'Agent'
+            'formName' => 'Agent',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -239,9 +242,13 @@ class SecurityController extends AbstractController
      */
     public function gestionMission()
     {
+        $headers = ["ID"];
+        $properties = ["id"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Mission',
-            'formName' => 'Mission'
+            'formName' => 'Mission',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -251,9 +258,13 @@ class SecurityController extends AbstractController
      */
     public function gestionStash()
     {
+        $headers = ["ID"];
+        $properties = ["id"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Stash',
-            'formName' => 'Stash'
+            'formName' => 'Stash',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 
@@ -263,9 +274,13 @@ class SecurityController extends AbstractController
      */
     public function gestionSpeciality()
     {
+        $headers = ["ID"];
+        $properties = ["id"];
         return $this->render('admin/home.html.twig', [
             'title' => 'Gestion Speciality',
-            'formName' => 'Speciality'
+            'formName' => 'Speciality',
+            'headers' => $headers,
+            'properties' => $properties
         ]);
     }
 

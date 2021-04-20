@@ -9,24 +9,27 @@
                 <div class="d-flex justify-content-center">
                     <a href="{{ path('admin.add', {formName: formName}) }}" class="btn btn-primary mt-4">Ajouter un enregistrement</a>
                 </div>
-                {% if admins is defined %}
+                {% if datas is defined %}
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Titre</th>
+                                {% for header in headers %}
+                                    <th>{{ header }}</th>
+                                {% endfor %}
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for admin in admins %}
+                            {% for data in datas %}
                                 <tr>
-                                    <td>{{ admin.id }} - {{ admin.lastName }} - {{ admin.firstName }}</td>
+                                    {% for property in properties %}
+                                        <td>{{ attribute(data, property)}}</td>
+                                    {% endfor %}
                                     <td>
-                                        <a href="{{ path('admin.home', {id: admin.id}) }}">Editer</a>
-                                        <form method="POST" action="{{ path('admin.home', {id: admin.id}) }}">
+                                        <a href="{{ path('admin.home', {id: data.id}) }}">Editer</a>
+                                        <form method="POST" action="{{ path('admin.home', {id: data.id}) }}">
                                             <input type="hidden" name="_method" value="DELETE"/>
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ admin.id)}}"/>
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ data.id)}}"/>
                                             <button>Supprimer</button>
                                         </form>
                                     </td>
