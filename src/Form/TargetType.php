@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class TargetType extends AbstractType
 {
@@ -25,19 +26,24 @@ class TargetType extends AbstractType
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
             ))
-            ->add('birthDate')
-            ->add('nationality')
-            ->add('codeName')
-            //->add('idMission')
-            /*
-            ->add('roles', ChoiceType::class, [
+            ->add('birthDate', DateType::class, [
+                'widget' => 'single_text',
+            
+                // prevents rendering it as type="date", to avoid HTML5 date pickers
+                'html5' => false,
+            
+                // adds a class that can be selected in JavaScript
+                'attr' => ['class' => 'js-datepicker'],
+            ])
+            ->add('nationality', ChoiceType::class, [
                 'choices'  => [  
-                    "Contact" => "1",
-                    "Target" => "2",
-                    "Agent" => "3"
-                    //"Admin (TEST DEV)" => "4"
+                    "France" => "France",
+                    "Espagne" => "Espagne",
+                    "Maroc" => "Maroc",
+                    "Belgique" => "Belgique"
                 ]])
-            */
+            ->add('codeName', TextType::class)
+            //->add('idMission')
         ;
     }
 

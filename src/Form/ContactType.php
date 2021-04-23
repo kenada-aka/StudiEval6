@@ -35,18 +35,14 @@ class ContactType extends AbstractType
                 // adds a class that can be selected in JavaScript
                 'attr' => ['class' => 'js-datepicker'],
             ])
-            ->add('nationality')
-            ->add('codeName')
-            //->add('idMission')
-            /*
-            ->add('roles', ChoiceType::class, [
+            ->add('nationality', ChoiceType::class, [
                 'choices'  => [  
-                    "Contact" => "1",
-                    "Target" => "2",
-                    "Agent" => "3"
-                    //"Admin (TEST DEV)" => "4"
+                    "France" => "France",
+                    "Espagne" => "Espagne",
+                    "Maroc" => "Maroc",
+                    "Belgique" => "Belgique"
                 ]])
-            */
+            ->add('codeName', TextType::class)
         ;
     }
 

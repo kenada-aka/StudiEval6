@@ -13,39 +13,30 @@ use Doctrine\ORM\Mapping as ORM;
 class Agent extends Guest
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $codeId;
 
     /**
-     * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="idAgent")
+     * @ORM\ManyToMany(targetEntity=Speciality::class, mappedBy="agents")
      */
     private $specialities;
 
     /**
-     * @ORM\OneToMany(targetEntity=Speciality::class, mappedBy="agent")
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idAgent")
      */
-    private $idSpeciality;
+    private $idMission;
+
+    
 
     protected $discr = 'agent';
+    
 
     public function __construct()
     {
         $this->specialities = new ArrayCollection();
-        $this->idSpeciality = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getCodeId(): ?string
     {
@@ -71,6 +62,18 @@ class Agent extends Guest
         return $this;
     }
 
+    public function getIdMission(): ?Mission
+    {
+        return $this->idMission;
+    }
+
+    public function setIdMission(Mission $idMission): self
+    {
+        $this->idMission = $idMission;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Speciality[]
      */
@@ -79,55 +82,29 @@ class Agent extends Guest
         return $this->specialities;
     }
 
-    public function addSpeciality(Speciality $speciality): self
+    public function addSpecialities(Speciality $specialities): self
     {
-        if (!$this->specialities->contains($speciality)) {
-            $this->specialities[] = $speciality;
-            $speciality->setIdAgent($this);
+        if (!$this->specialities->contains($specialities)) {
+            $this->specialities[] = $specialities;
+            $specialities->addAgents($this);
         }
-
         return $this;
     }
 
-    public function removeSpeciality(Speciality $speciality): self
+    public function removeSpecialities(Speciality $specialities): self
     {
-        if ($this->specialities->removeElement($speciality)) {
+        if ($this->specialities->removeElement($specialities)) {
             // set the owning side to null (unless already changed)
-            if ($speciality->getIdAgent() === $this) {
-                $speciality->setIdAgent(null);
+            if ($specialities->getAgents() === $this) {
+                $specialities->setAgents(null);
             }
         }
-
         return $this;
     }
 
-    /**
-     * @return Collection|Speciality[]
-     */
-    public function getIdSpeciality(): Collection
+    public function getClassName()
     {
-        return $this->idSpeciality;
+        return (new \ReflectionClass($this))->getShortName();
     }
 
-    public function addIdSpeciality(Speciality $idSpeciality): self
-    {
-        if (!$this->idSpeciality->contains($idSpeciality)) {
-            $this->idSpeciality[] = $idSpeciality;
-            $idSpeciality->setAgent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdSpeciality(Speciality $idSpeciality): self
-    {
-        if ($this->idSpeciality->removeElement($idSpeciality)) {
-            // set the owning side to null (unless already changed)
-            if ($idSpeciality->getAgent() === $this) {
-                $idSpeciality->setAgent(null);
-            }
-        }
-
-        return $this;
-    }
 }

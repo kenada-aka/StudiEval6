@@ -27,15 +27,6 @@ class AdminType extends AbstractType
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
             ))
-            /*
-            ->add('roles', ChoiceType::class, [
-                'choices'  => [  
-                    "Contact" => "1",
-                    "Target" => "2",
-                    "Agent" => "3"
-                    //"Admin (TEST DEV)" => "4"
-                ]])
-            */
         ;
     }
 

@@ -10,12 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Admin extends User
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -28,11 +22,6 @@ class Admin extends User
     private $registrationDate;
 
     protected $discr = 'admin';
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getEmail(): ?string
     {

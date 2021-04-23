@@ -25,17 +25,8 @@ class GuestType extends AbstractType
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
             ))
-            ->add('birthDate')
-            ->add('nationality')
-            /*
-            ->add('roles', ChoiceType::class, [
-                'choices'  => [  
-                    "Contact" => "1",
-                    "Target" => "2",
-                    "Agent" => "3"
-                    //"Admin (TEST DEV)" => "4"
-                ]])
-            */
+            ->add('birthDate', TextType::class)
+            ->add('nationality', TextType::class)
         ;
     }
 

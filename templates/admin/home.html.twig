@@ -9,29 +9,72 @@
                 <div class="d-flex justify-content-center">
                     <a href="{{ path('admin.add', {formName: formName}) }}" class="btn btn-primary mt-4">Ajouter un enregistrement</a>
                 </div>
-                {% if datas is defined %}
+                {% if datas %}
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 {% for header in headers %}
-                                    <th>{{ header }}</th>
+                                    <th class="text-center">{{ header }}</th>
                                 {% endfor %}
-                                <th>Actions</th>
+                                <th class="text-center" style="width:200px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for data in datas %}
                                 <tr>
                                     {% for property in properties %}
-                                        <td>{{ attribute(data, property)}}</td>
+                                        <td>
+                                            {% if attribute(data, property) is iterable %}
+                                                {% if property == "specialities" %}
+                                                    <!-- Specialities -->
+                                                    {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : specialities, 'childProperty' : "name", "path": "admin.gestion.speciality.addToAgent"} %}
+                                                {% elseif property == "contacts" %}
+                                                    <!-- Contacts -->
+                                                    {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : contacts, 'childProperty' : "codeName", "path": "admin.gestion.mission.addContact"} %}
+                                                {% elseif property == "targets" %}
+                                                    <!-- Targets -->
+                                                    {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : targets, 'childProperty' : "codeName", "path": "admin.gestion.mission.addTarget"} %}
+                                                {% elseif property == "agents" %}
+                                                    <!-- Agents -->
+                                                    {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : agents, 'childProperty' : "codeId", "path": "admin.gestion.mission.addAgent"} %}
+                                                {% elseif property == "missions" %}
+                                                    <!-- Missions -->
+                                                    addMissionsForm
+                                                {% else %}
+                                                    {{ attribute(data, property)|join(', ') }}
+                                                {% endif %}
+                                            {% elseif attribute(data, property).timestamp is defined %}
+                                                {{ attribute(data, property)|date('d/m/Y') }}
+                                            {% elseif attribute(data, property).id is defined %}
+                                                <ul class="list-group">
+                                                    {% if attribute(data, property).className == "Speciality" %}
+                                                        {{ attribute(data, property).name }}
+                                                    {% elseif attribute(data, property).className == "Mission" %}
+                                                        {{ attribute(data, property).title }}
+                                                    {% elseif attribute(data, property).className == "Stash" %}
+                                                        {{ attribute(data, property).code }}
+                                                    {% endif %}
+                                                </ul>
+                                            {% else %}
+                                                {% if property == "idStash" %}
+                                                    <!-- Stashs -->
+                                                    {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : stashs, 'childProperty' : "code", "path": "admin.gestion.mission.addStash"} %}
+                                                {% else %}
+                                                    {{ attribute(data, property) }}
+                                                {% endif %}
+                                            {% endif %}
+                                            
+                                        </td>
                                     {% endfor %}
                                     <td>
-                                        <a href="{{ path('admin.home', {id: data.id}) }}">Editer</a>
-                                        <form method="POST" action="{{ path('admin.home', {id: data.id}) }}">
-                                            <input type="hidden" name="_method" value="DELETE"/>
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ data.id)}}"/>
-                                            <button>Supprimer</button>
-                                        </form>
+                                        <div class="btn-group btn-group-sm d-flex justify-content-center" role="group">
+                                            <a href="{{ path('admin.update', {formName: formName, id: data.id}) }}" class="btn btn-outline-primary" style="font-size:1.05rem;">Modifier</a>
+                                            <form method="POST" action="{{ path('admin.remove', {formName: formName, id: data.id}) }}">
+                                                <input type="hidden" name="_method" value="DELETE"/>
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ data.id)}}"/>
+                                                <button class="btn btn-danger" style="border-top-left-radius:0;border-bottom-left-radius:0;">Supprimer</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

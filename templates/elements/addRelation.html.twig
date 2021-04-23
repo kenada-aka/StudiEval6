@@ -1,0 +1,15 @@
+
+{% if attribute(data, property)|length != 0 %}
+    <ul class="list-group">
+        {% for child in attribute(data, property) %}
+            <li class="list-group-item">{{ attribute(child, childProperty) }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<select class="form-select">
+    <option selected>Sélectionner</option>
+    {% for option in options %}
+        <option value="{{ data.id }} - {{ option.id }}">{{ attribute(option, childProperty) }}</option>
+    {% endfor %}
+</select>
+<button class="btn btn-primary xhr" data-xhr="{{ path(path) }}">Ajouter</button>

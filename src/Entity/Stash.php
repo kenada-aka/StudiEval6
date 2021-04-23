@@ -38,7 +38,7 @@ class Stash
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="stashes")
+     * @ORM\OneToOne(targetEntity=Mission::class, inversedBy="idStash")
      */
     private $idMission;
 
@@ -106,4 +106,10 @@ class Stash
 
         return $this;
     }
+
+    public function getClassName()
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
+    
 }

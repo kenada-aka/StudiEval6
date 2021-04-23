@@ -3,11 +3,20 @@
 namespace App\Form;
 
 use App\Entity\Mission;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
+
+use App\Entity\Speciality;
 
 class MissionType extends AbstractType
 {
@@ -17,11 +26,63 @@ class MissionType extends AbstractType
             ->add('title', TextType::class)
             ->add('description', TextType::class)
             ->add('codeName', TextType::class)
-            ->add('country', TextType::class)
-            ->add('startDate', TextType::class)
-            ->add('endDate', TextType::class)
-            ->add('state', TextType::class)
-            ->add('type', TextType::class)
+            ->add('country', ChoiceType::class, [
+                'choices'  => [  
+                    "France" => "France",
+                    "Espagne" => "Espagne",
+                    "Maroc" => "Maroc",
+                    "Belgique" => "Belgique"
+                ]])
+            ->add('startDate', DateType::class, [
+                'widget' => 'single_text',
+            
+                // prevents rendering it as type="date", to avoid HTML5 date pickers
+                'html5' => false,
+            
+                // adds a class that can be selected in JavaScript
+                'attr' => ['class' => 'js-datepicker'],
+            ])
+            ->add('endDate', DateType::class, [
+                'widget' => 'single_text',
+            
+                // prevents rendering it as type="date", to avoid HTML5 date pickers
+                'html5' => false,
+            
+                // adds a class that can be selected in JavaScript
+                'attr' => ['class' => 'js-datepicker'],
+            ])
+            ->add('state', ChoiceType::class, [
+                'choices'  => [  
+                    "En préparation" => "En préparation",
+                    "En cours" => "En cours",
+                    "Terminé" => "Terminé",
+                    "Echec" => "Echec"
+                ]])
+            ->add('type', ChoiceType::class, [
+                'choices'  => [  
+                    "Surveillance" => "Surveillance",
+                    "Infiltration" => "Infiltration"
+                ]])
+            //->add('idAgent', EntityType::class, ['class' => Agent::class, 'choice_label' => 'username'])
+            ->add('idSpeciality', EntityType::class, ['class' => Speciality::class, 'choice_label' => 'name']) 
+            /*
+            ->add('idAgent', CollectionType::class, array(
+                'entry_type'   => EntityType::class,
+                'entry_options'  => array(
+                    'class'      => Agent::class,
+                    'choice_label' => 'username'
+                )
+            ))
+            */
+/*
+            ->add('idAgent', EntityType::class, [
+                'class' => Agent::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.username', 'ASC');
+                },
+                'choice_label' => 'username',
+            ])*/
             //->add('idSpeciality')
         ;
     }

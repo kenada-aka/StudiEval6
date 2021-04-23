@@ -10,30 +10,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Target extends Guest
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    
 
     /**
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idTarget")
+     */
+    private $idMission;
+
+   /**
      * @ORM\Column(type="string", length=255)
      */
     private $codeName;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="contact", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $idMission;
-
     protected $discr = 'target';
-    
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
     
     public function getCodeName(): ?string
     {
@@ -70,4 +59,10 @@ class Target extends Guest
 
         return $this;
     }
+
+    public function getClassName()
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
+    
 }

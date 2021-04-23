@@ -14,12 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Guest extends User
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="datetime")
@@ -32,11 +26,6 @@ class Guest extends User
     private $nationality;
 
     protected $discr = 'guest';
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getBirthDate(): ?\DateTimeInterface
     {

@@ -59,19 +59,41 @@ class Mission
      */
     private $type;
 
+
+
+
     /**
-     * @ORM\OneToOne(targetEntity=Speciality::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Speciality::class)
      */
     private $idSpeciality;
 
     /**
-     * @ORM\OneToMany(targetEntity=Stash::class, mappedBy="idMission")
+     * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="idMission")
      */
-    private $stashes;
+    private $contacts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Target::class, mappedBy="idMission")
+     */
+    private $targets;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Agent::class, mappedBy="idMission")
+     */
+    private $agents;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Stash::class, mappedBy="idMission")
+     */
+    private $idStash;
+
+    
 
     public function __construct()
     {
-        $this->stashes = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->targets = new ArrayCollection();
+        $this->agents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,34 +209,106 @@ class Mission
         return $this;
     }
 
-    /**
-     * @return Collection|Stash[]
-     */
-    public function getStashes(): Collection
+    public function getIdStash(): ?Stash
     {
-        return $this->stashes;
+        return $this->idStash;
     }
 
-    public function addStash(Stash $stash): self
+    public function setIdStash(Stash $idStash): self
     {
-        if (!$this->stashes->contains($stash)) {
-            $this->stashes[] = $stash;
-            $stash->setIdMission($this);
-        }
+        $this->idStash = $idStash;
 
         return $this;
     }
 
-    public function removeStash(Stash $stash): self
+    /**
+     * @return Collection|Contact[]
+     */
+    public function getContacts(): Collection
     {
-        if ($this->stashes->removeElement($stash)) {
+        return $this->contacts;
+    }
+
+    public function addContacts(Contact $contacts): self
+    {
+        if (!$this->contacts->contains($contacts)) {
+            $this->contacts[] = $contacts;
+            $contacts->setContacts($this);
+        }
+        return $this;
+    }
+
+    public function removeContacts(Contact $contacts): self
+    {
+        if ($this->contacts->removeElement($contacts)) {
             // set the owning side to null (unless already changed)
-            if ($stash->getIdMission() === $this) {
-                $stash->setIdMission(null);
+            if ($contacts->getContacts() === $this) {
+                $contacts->setContacts(null);
             }
         }
-
         return $this;
     }
+
+    /**
+     * @return Collection|Target[]
+     */
+    public function getTargets(): Collection
+    {
+        return $this->targets;
+    }
+
+    public function addTargets(Contact $targets): self
+    {
+        if (!$this->targets->contains($targets)) {
+            $this->targets[] = $targets;
+            $targets->setTargets($this);
+        }
+        return $this;
+    }
+
+    public function removeTargets(Target $targets): self
+    {
+        if ($this->targets->removeElement($targets)) {
+            // set the owning side to null (unless already changed)
+            if ($targets->getTargets() === $this) {
+                $targets->setTargets(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Agent[]
+     */
+    public function getAgents(): Collection
+    {
+        return $this->agents;
+    }
+
+    public function addAgents(Agent $agents): self
+    {
+        if (!$this->agents->contains($agents)) {
+            $this->agents[] = $agents;
+            $agents->setAgents($this);
+        }
+        return $this;
+    }
+
+    public function removeAgents(Agent $agents): self
+    {
+        if ($this->agents->removeElement($agents)) {
+            // set the owning side to null (unless already changed)
+            if ($agents->getAgents() === $this) {
+                $agents->setAgents(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getClassName()
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
+    
     
 }
