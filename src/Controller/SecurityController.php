@@ -76,6 +76,7 @@ class SecurityController extends AbstractController
         $this->specialityRepository = $specialityRepository;
     }
 
+
     /**
      * @Route("/login", name="app_login")
      */
@@ -96,111 +97,18 @@ class SecurityController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
+
     /**
      * @Route("/home", name="admin.home")
      * @IsGranted("ROLE_ADMIN")
      */
     public function home(AuthenticationUtils $authenticationUtils)
     {
-        
-
         $error = $authenticationUtils->getLastAuthenticationError();
 
         return $this->render('home/home.html.twig', [
             'title' => 'Accueil',
             'error' => $error
-        ]);
-    }
-
-    /**
-     * @Route("/admin/add/{formName}", name="admin.add")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function add(string $formName, Request $request, UserPasswordEncoderInterface $passwordEncoder)
-    {
-        switch($formName)
-        {
-            case "Admin":
-                $entity = new Admin();
-                $form = $this->createForm(AdminType::class, $entity);
-                break;
-            case "Contact":
-                $entity = new Contact();
-                $form = $this->createForm(ContactType::class, $entity);
-                break;
-            case "Target":
-                $entity = new Target();
-                $form = $this->createForm(TargetType::class, $entity);
-                break;
-            case "Agent":
-                $entity = new Agent();
-                $form = $this->createForm(AgentType::class, $entity);
-                break;
-            case "Mission":
-                $entity = new Mission();
-                $form = $this->createForm(MissionType::class, $entity);
-                break;
-            case "Stash":
-                $entity = new Stash();
-                $form = $this->createForm(StashType::class, $entity);
-                break;
-            case "Speciality":
-                $entity = new Speciality();
-                $form = $this->createForm(SpecialityType::class, $entity);
-                break;
-        }
-        //dump($request);die();
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid())
-        {
-            // Règles métiers
-
-            switch($formName)
-            {
-                case "Admin":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    $entity->setRoles(array("ROLE_ADMIN"));
-                    $entity->setRegistrationDate(new \DateTime());
-                    break;
-                case "Contact":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    $entity->setRoles(array("ROLE_CONTACT"));
-                    break;
-                case "Target":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    $entity->setRoles(array("ROLE_TARGET"));
-                    break;
-                case "Agent":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    $entity->setRoles(array("ROLE_AGENT"));
-                    break;
-                case "Mission":
-                    //$entity->setIdMision($password);
-                    break;
-                case "Stash":
-                    
-                    break;
-                case "Speciality":
-                    
-                    break;
-            }
-            // id de mission est null ici
-            $this->em->persist($entity);
-            //dump($entity);die();
-            $this->em->flush();
-            
-            return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
-        }
-
-        return $this->render('admin/form.html.twig', [
-            'title' => 'Ajouter un enregistrement à '. $formName,
-            'type' => 'add',
-            'form' => $form->createView()
         ]);
     }
 
@@ -309,18 +217,26 @@ class SecurityController extends AbstractController
         }
         return $this->render('admin/home.html.twig', $array);
     }
-
     
 
-    
-
-    
-
-    
-
-    
-
-    
+    /**
+     * @Route("/admin/add/{formName}", name="admin.add")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function add(string $formName, Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $form = $this->form($formName, $request, null, $passwordEncoder, "add");
+        if($request->getMethod() == "POST")
+        {
+            dump($request);die();
+            return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
+        }
+        return $this->render('admin/form.html.twig', [
+            'title' => 'Ajouter un enregistrement à '. $formName,
+            'type' => 'add',
+            'form' => $form->createView()
+        ]);
+    }
 
     /**
      * @Route("/admin/update/{formName}/{id}", name="admin.update")
@@ -328,78 +244,11 @@ class SecurityController extends AbstractController
      */
     public function update(string $formName, int $id, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        switch($formName)
+        $form = $this->form($formName, $request, $id, $passwordEncoder, "update");
+        if($request->getMethod() == "POST")
         {
-            case "Admin":
-                $entity = $this->adminRepository->find($id);
-                $form = $this->createForm(AdminType::class, $entity);
-                break;
-            case "Contact":
-                $entity = $this->contactRepository->find($id);
-                $form = $this->createForm(ContactType::class, $entity);
-                break;
-            case "Target":
-                $entity = $this->targetRepository->find($id);
-                $form = $this->createForm(TargetType::class, $entity);
-                break;
-            case "Agent":
-                $entity = $this->agentRepository->find($id);
-                $form = $this->createForm(AgentType::class, $entity);
-                break;
-            case "Mission":
-                $entity = $this->missionRepository->find($id);
-                $form = $this->createForm(MissionType::class, $entity);
-                break;
-            case "Stash":
-                $entity = $this->stashRepository->find($id);
-                $form = $this->createForm(StashType::class, $entity);
-                break;
-            case "Speciality":
-                $entity = $this->specialityRepository->find($id);
-                $form = $this->createForm(SpecialityType::class, $entity);
-                break;
-        }
-        
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid())
-        {
-
-            switch($formName)
-            {
-                case "Admin":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    break;
-                case "Contact":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    break;
-                case "Target":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    break;
-                case "Agent":
-                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
-                    $entity->setPassword($password);
-                    break;
-                case "Mission":
-                    
-                    break;
-                case "Stash":
-                    
-                    break;
-                case "Speciality":
-                    
-                    break;
-            }
-            
-            $this->em->persist($entity);
-            $this->em->flush();
-            
             return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
         }
-        
         return $this->render('admin/form.html.twig', [
             'title' => 'Modifier un enregistrement à '. $formName,
             'type' => 'update',
@@ -411,48 +260,126 @@ class SecurityController extends AbstractController
      * @Route("/admin/remove/{formName}/{id}", name="admin.remove", methods="DELETE")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function remove(string $formName, int $id, Request $request)
+    public function remove(string $formName, int $id, Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $form = $this->form($formName, $request, $id, $passwordEncoder, "remove");
+        return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
+    }
+
+    private function form(string $formName, Request $request, ?int $id, UserPasswordEncoderInterface $passwordEncoder, string $mode)
     {
         switch($formName)
         {
             case "Admin":
-                $entity = $this->adminRepository->find($id);
+                $entity = $id ? $this->adminRepository->find($id) : new Admin();
                 $form = $this->createForm(AdminType::class, $entity);
                 break;
             case "Contact":
-                $entity = $this->contactRepository->find($id);
+                $entity = $id ? $this->contactRepository->find($id) : new Contact();
                 $form = $this->createForm(ContactType::class, $entity);
                 break;
             case "Target":
-                $entity = $this->targetRepository->find($id);
+                $entity = $id ? $this->targetRepository->find($id) : new Target();
                 $form = $this->createForm(TargetType::class, $entity);
                 break;
             case "Agent":
-                $entity = $this->agentRepository->find($id);
+                $entity = $id ? $this->agentRepository->find($id) : new Agent();
                 $form = $this->createForm(AgentType::class, $entity);
                 break;
             case "Mission":
-                $entity = $this->missionRepository->find($id);
+                $entity = $id ? $this->missionRepository->find($id) : new Mission();
                 $form = $this->createForm(MissionType::class, $entity);
                 break;
             case "Stash":
-                $entity = $this->stashRepository->find($id);
+                $entity = $id ? $this->stashRepository->find($id) : new Stash();
                 $form = $this->createForm(StashType::class, $entity);
                 break;
             case "Speciality":
-                $entity = $this->specialityRepository->find($id);
+                $entity = $id ? $this->specialityRepository->find($id) : new Speciality();
                 $form = $this->createForm(SpecialityType::class, $entity);
                 break;
         }
 
-        if($this->isCsrfTokenValid('delete'. $entity->getId(), $request->get('_token')))
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid() || $mode == "remove")
         {
-            $this->em->remove($entity);
-            $this->em->flush();
+            switch($formName .".". $mode)
+            {
+                case "Admin.add":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    $entity->setRoles(array("ROLE_ADMIN"));
+                    $entity->setRegistrationDate(new \DateTime());
+                    break;
+                case "Admin.update":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    break;
+                case "Contact.add":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    $entity->setRoles(array("ROLE_CONTACT"));
+                    break;
+                case "Contact.update":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    break;
+                case "Target.add":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    $entity->setRoles(array("ROLE_TARGET"));
+                    break;
+                case "Target.update":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    break;
+                case "Agent.add":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    $entity->setRoles(array("ROLE_AGENT"));
+                    break;
+                case "Agent.update":
+                    $password = $passwordEncoder->encodePassword($entity, $entity->getPassword());
+                    $entity->setPassword($password);
+                    break;
+                case "Mission.add":
+                
+                    break;
+                case "Mission.update":
+                    
+                    break;
+                case "Stash.add":
+                
+                    break;
+                case "Stash.update":
+                    
+                    break;
+                case "Speciality.add":
+                
+                    break;
+                case "Speciality.update":
+                    
+                    break;
+            }
+
+            $csrfToken = $mode == "remove" ? 'delete'. $entity->getId() : strtolower($formName);
+            $formToken = $mode == "remove" ? $request->get('_token') : $request->request->get(strtolower($formName))['_token'];
+
+            if($this->isCsrfTokenValid($csrfToken, $formToken))
+            {
+                $this->em->remove($entity);
+                $this->em->flush();
+            }
         }
-        
-        return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
+
+        return $form;
     }
+
+
+
+
+
 
     /**
      * @Route("/admin/gestion/speciality/addToAgent", name="admin.gestion.speciality.addToAgent", methods="POST")
