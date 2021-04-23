@@ -204,22 +204,14 @@ class SecurityController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/admin/gestion/admin", name="admin.gestion.admin")
      * @IsGranted("ROLE_ADMIN")
      */
     public function gestionAdmin()
     {
-        $datas = $this->adminRepository->findAll();
-        $headers = ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Email", "Date Inscription"];
-        $properties = ["id", "username", "id", "roles", "lastName", "firstName", "email", "registrationDate"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Admin',
-            'formName' => 'Admin',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties
-        ]);
+        return $this->gestion("Gestion Admin", "Admin", "admin");
     }
 
     /**
@@ -228,16 +220,7 @@ class SecurityController extends AbstractController
      */
     public function gestionContact()
     {
-        $datas = $this->contactRepository->findAll();
-        $headers = ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"];
-        $properties = ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Contact',
-            'formName' => 'Contact',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties
-        ]);
+        return $this->gestion("Gestion Contact", "Contact", "contact");
     }
 
     /**
@@ -246,62 +229,15 @@ class SecurityController extends AbstractController
      */
     public function gestionTarget()
     {
-        $datas = $this->targetRepository->findAll();
-        $headers = ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"];
-        $properties = ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Target',
-            'formName' => 'Target',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties
-        ]);
+        return $this->gestion("Gestion Target", "Target", "target");
     }
-
     /**
      * @Route("/admin/gestion/agent", name="admin.gestion.agent")
      * @IsGranted("ROLE_ADMIN")
      */
     public function gestionAgent()
     {
-        $datas = $this->agentRepository->findAll();
-        $specialities = $this->specialityRepository->findAll();
-        $headers = ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Code ID", "Spécialité(s) (ManyToMany)", "Mission (ManyToOne)"];
-        $properties = ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeId", "specialities", "idMission"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Agent',
-            'formName' => 'Agent',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties,
-            'specialities' => $specialities
-        ]);
-    }
-
-    /**
-     * @Route("/admin/gestion/mission", name="admin.gestion.mission")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function gestionMission()
-    {
-        $datas = $this->missionRepository->findAll();
-        $contacts = $this->contactRepository->findAll();
-        $targets = $this->targetRepository->findAll();
-        $agents = $this->agentRepository->findAll();
-        $stashs = $this->stashRepository->findAll();
-        $headers = ["ID", "Titre", "Description", "Nom de code", "Pays", "Date début", "Date fin", "Statut", "Type", "Spécialité (OneToOne)", "Agent(s) (OneToMany)", "Contact(s) (OneToMany)", "Cible(s) (OneToMany)", "Planque(s) (OneToOne)"];
-        $properties = ["id", "title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality", "agents", "contacts", "targets", "idStash"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Mission',
-            'formName' => 'Mission',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties,
-            'contacts' => $contacts,
-            'targets' => $targets,
-            'agents' => $agents,
-            'stashs' => $stashs
-        ]);
+        return $this->gestion("Gestion Agent", "Agent", "agent", ["speciality" => "specialities"]);
     }
 
     /**
@@ -310,16 +246,7 @@ class SecurityController extends AbstractController
      */
     public function gestionStash()
     {
-        $datas = $this->stashRepository->findAll();
-        $headers = ["ID", "Code", "Adresse", "Pays", "Type", "Mission (OneToOne)"];
-        $properties = ["id", "code", "adress", "country", "type", "idMission"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Stash',
-            'formName' => 'Stash',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties
-        ]);
+        return $this->gestion("Gestion Stash", "Stash", "stash");
     }
 
     /**
@@ -328,19 +255,72 @@ class SecurityController extends AbstractController
      */
     public function gestionSpeciality()
     {
-        $datas = $this->specialityRepository->findAll();
-        $agents = $this->agentRepository->findAll();
-        $headers = ["ID", "Nom", "Agent (ManyToMany)", "Mission (ManyToOne)"];
-        $properties = ["id", "name", "agents", "missions"];
-        return $this->render('admin/home.html.twig', [
-            'title' => 'Gestion Speciality',
-            'formName' => 'Speciality',
-            'datas' => $datas,
-            'headers' => $headers,
-            'properties' => $properties,
-            'agents' => $agents
-        ]);
+        return $this->gestion("Gestion Speciality", "Speciality", "speciality", ["agent" => "agents"]);
     }
+
+    /**
+     * @Route("/admin/gestion/mission", name="admin.gestion.mission")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function gestionMission()
+    {
+        return $this->gestion("Gestion Mission", "Mission", "mission", ["agent" => "agents", "target" => "targets", "contact" => "contacts", "stash" => "stashs"]);
+    }
+
+    private function gestion(string $title, string $formName, string $page, array $datas = [])
+    {
+        $repositories = [
+            "admin" => $this->adminRepository,
+            "contact" => $this->contactRepository,
+            "target" => $this->targetRepository,
+            "agent" => $this->agentRepository,
+            "stash" => $this->stashRepository,
+            "speciality" => $this->specialityRepository,
+            "mission" => $this->missionRepository
+        ];
+        $headers = [
+            "admin" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Email", "Date Inscription"],
+            "contact" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"],
+            "target" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"],
+            "agent" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Code ID", "Spécialité(s) (ManyToMany)", "Mission (ManyToOne)"],
+            "stash" => ["ID", "Code", "Adresse", "Pays", "Type", "Mission (OneToOne)"],
+            "speciality" => ["ID", "Nom", "Agent (ManyToMany)", "Mission (ManyToOne)"],
+            "mission" => ["ID", "Titre", "Description", "Nom de code", "Pays", "Date début", "Date fin", "Statut", "Type", "Spécialité (OneToOne)", "Agent(s) (OneToMany)", "Contact(s) (OneToMany)", "Cible(s) (OneToMany)", "Planque(s) (OneToOne)"]
+        ];
+        $properties = [
+            "admin" => ["id", "username", "id", "roles", "lastName", "firstName", "email", "registrationDate"],
+            "contact" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"],
+            "target" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"],
+            "agent" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeId", "specialities", "idMission"],
+            "stash" => ["id", "code", "adress", "country", "type", "idMission"],
+            "speciality" => ["id", "name", "agents", "missions"],
+            "mission" => ["id", "title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality", "agents", "contacts", "targets", "idStash"]
+        ];
+        $array = [
+            'title' => $title,
+            'formName' => $formName,
+            'datas' => $repositories[$page]->findAll(),
+            'headers' => $headers[$page],
+            'properties' => $properties[$page]
+        ];
+        foreach($datas as $k => $v)
+        {
+            $array[$v] = $repositories[$k]->findAll();
+        }
+        return $this->render('admin/home.html.twig', $array);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     /**
      * @Route("/admin/update/{formName}/{id}", name="admin.update")
