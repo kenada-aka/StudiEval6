@@ -363,6 +363,8 @@ class SecurityController extends AbstractController
                     break;
             }
 
+            // Permet de vérifier la valider CSRF Token des 2 méthodes utilisées
+
             $csrfToken = $mode == "remove" ? 'delete'. $entity->getId() : strtolower($formName);
             $formToken = $mode == "remove" ? $request->get('_token') : $request->request->get(strtolower($formName))['_token'];
 
@@ -375,10 +377,84 @@ class SecurityController extends AbstractController
 
         return $form;
     }
+    
 
+    /**
+     * @Route("/admin/gestion/mission/addContact", name="admin.gestion.mission.addContact", methods="POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function addMissionToContact(Request $request)
+    {
+        return $this->addMissionToOne($request, "contact", "Ce contact est déjà affecté à une mission !");
+    }
 
+    /**
+     * @Route("/admin/gestion/mission/addTarget", name="admin.gestion.mission.addTarget", methods="POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function addMissionToTarget(Request $request)
+    {
+        return $this->addMissionToOne($request, "target", "Cette cible est déjà affecté à une mission !");
+    }
 
+    /**
+     * @Route("/admin/gestion/mission/addAgent", name="admin.gestion.mission.addAgent", methods="POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function addMissionToAgent(Request $request)
+    {
+        return $this->addMissionToOne($request, "agent", "Cette agent est déjà affecté à une mission !");
+    }
 
+    /**
+     * @Route("/admin/gestion/mission/addStash", name="admin.gestion.mission.addStash", methods="POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function addMissionToStash(Request $request)
+    {
+        return $this->addMissionToOne($request, "stash", "Cette planque est déjà affecté à une mission !");
+    }
+
+    private function addMissionToOne(Request $request, string $many, string $errorMsg)
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $mission = $this->missionRepository->find($request->request->get('idOne'));
+            
+            switch($many)
+            {
+                case "contact": $repository = $this->contactRepository; break;
+                case "target": $repository = $this->targetRepository; break;
+                case "agent": $repository = $this->agentRepository; break;
+                case "stash": $repository = $this->stashRepository; break;
+            }
+            
+            $entity = $repository->find($request->request->get('idMany'));
+
+            if($entity->getIdMission())
+            {
+                if($entity->getIdMission()->getId())
+                {
+                    return new JsonResponse(['statut' => "ng", "error" => $errorMsg]);
+                }
+            }
+
+            $entity->setIdMission($mission);
+                
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            switch($many)
+            {
+                case "contact": $response = $entity->getCodeName(); break;
+                case "target": $response = $entity->getCodeName(); break;
+                case "agent": $response = $entity->getCodeId(); break;
+                case "stash": $response = $entity->getCode(); break;
+            }
+            
+            return new JsonResponse(['statut' => "ok", 'text' => $response]);
+        }
+    }
 
 
     /**
@@ -397,134 +473,6 @@ class SecurityController extends AbstractController
             $this->em->flush();
 
             $response = $speciality->getName();
-
-            return new JsonResponse(['statut' => "ok", 'text' => $response]);
-        }
-    }
-
-    /**
-     * @Route("/admin/gestion/mission/addContact", name="admin.gestion.mission.addContact", methods="POST")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function addMissionToContact(Request $request)
-    {
-        if($request->isXmlHttpRequest())
-        {
-            $mission = $this->missionRepository->find($request->request->get('idOne'));
-            $contact = $this->contactRepository->find($request->request->get('idMany'));
-
-            // 1 Contact peut être affecté qu'à 1 Mission
-
-            if($contact->getIdMission())
-            {
-                if($contact->getIdMission()->getId() == $request->request->get('idOne'))
-                {
-                    return new JsonResponse(['statut' => "ng", "error" => "Ce contact est déjà affecté à une mission !"]);
-                }
-            }
-
-            $contact->setIdMission($mission);
-                
-            $this->em->persist($contact);
-            $this->em->flush();
-
-            $response = $contact->getCodeName();
-
-            return new JsonResponse(['statut' => "ok", 'text' => $response]);
-        }
-    }
-
-    /**
-     * @Route("/admin/gestion/mission/addTarget", name="admin.gestion.mission.addTarget", methods="POST")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function addMissionToTarget(Request $request)
-    {
-        if($request->isXmlHttpRequest())
-        {
-            $mission = $this->missionRepository->find($request->request->get('idOne'));
-            $target = $this->targetRepository->find($request->request->get('idMany'));
-
-            // 1 Target peut être affecté qu'à 1 Mission
-
-            if($target->getIdMission())
-            {
-                if($target->getIdMission()->getId() == $request->request->get('idOne'))
-                {
-                    return new JsonResponse(['statut' => "ng", "error" => "Cette cible est déjà affecté à une mission !"]);
-                }
-            }
-
-            $target->setIdMission($mission);
-                
-            $this->em->persist($target);
-            $this->em->flush();
-
-            $response = $target->getCodeName();
-
-            return new JsonResponse(['statut' => "ok", 'text' => $response]);
-        }
-    }
-
-    /**
-     * @Route("/admin/gestion/mission/addAgent", name="admin.gestion.mission.addAgent", methods="POST")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function addMissionToAgent(Request $request)
-    {
-        if($request->isXmlHttpRequest())
-        {
-            $mission = $this->missionRepository->find($request->request->get('idOne'));
-            $agent = $this->agentRepository->find($request->request->get('idMany'));
-
-            // 1 Agent peut être affecté qu'à 1 Mission
-
-            if($agent->getIdMission())
-            {
-                if($agent->getIdMission()->getId() == $request->request->get('idOne'))
-                {
-                    return new JsonResponse(['statut' => "ng", "error" => "Cette agent est déjà affecté à une mission !"]);
-                }
-            }
-
-            $agent->setIdMission($mission);
-                
-            $this->em->persist($agent);
-            $this->em->flush();
-
-            $response = $agent->getCodeId();
-
-            return new JsonResponse(['statut' => "ok", 'text' => $response]);
-        }
-    }
-
-    /**
-     * @Route("/admin/gestion/mission/addStash", name="admin.gestion.mission.addStash", methods="POST")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function addMissionToStash(Request $request)
-    {
-        if($request->isXmlHttpRequest())
-        {
-            $mission = $this->missionRepository->find($request->request->get('idOne'));
-            $stash = $this->stashRepository->find($request->request->get('idMany'));
-
-            // 1 Stash peut être affecté qu'à 1 Mission
-
-            if($stash->getIdMission())
-            {
-                if($stash->getIdMission()->getId())
-                {
-                    return new JsonResponse(['statut' => "ng", "error" => "Cette planque est déjà affecté à une mission !"]);
-                }
-            }
-
-            $stash->setIdMission($mission);
-                
-            $this->em->persist($stash);
-            $this->em->flush();
-
-            $response = $stash->getCode();
 
             return new JsonResponse(['statut' => "ok", 'text' => $response]);
         }
