@@ -4,18 +4,20 @@
 {% block body %}
 
 <main id="main">
-    <section class="section">
-        <div class="container mt-4">   
-            {{ form_start(form) }}
-                {{ form_rest(form) }}
-                <div class="text-center mt-4">
-                    {% if type == "add" %}
-                        <button type="submit" class="btn btn-primary mt-4">Ajouter</button>
-                    {% elseif type == "update" %}
-                        <button type="submit" class="btn btn-primary mt-4">Modifier</button>
-                    {% endif %}
-                </div>
-            {{ form_end(form) }}
+    <section class="section d-flex justify-content-center">
+        <div class="card mt-4 border-success" style="width: 25rem;">
+            <div class="card-body">
+                {{ form_start(form) }}
+                    {{ form_rest(form) }}
+                    <div class="text-center mt-4">
+                        {% if type == "add" %}
+                            <button type="submit" class="btn btn-primary mt-4">Ajouter</button>
+                        {% elseif type == "update" %}
+                            <button type="submit" class="btn btn-primary mt-4">Modifier</button>
+                        {% endif %}
+                    </div>
+                {{ form_end(form) }}
+            </div>
         </div>
     </section>
 </main>
