@@ -86,7 +86,7 @@ class SecurityController extends AbstractController
         {
             return $this->redirectToRoute('admin.home');
         }
-        return $this->redirectToRoute('admin.home');
+        return $this->redirectToRoute('home');
     }
 
     /**

@@ -63,7 +63,7 @@ class Mission
 
 
     /**
-     * @ORM\OneToOne(targetEntity=Speciality::class)
+     * @ORM\ManyToOne(targetEntity=Speciality::class)
      */
     private $idSpeciality;
 

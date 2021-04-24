@@ -30,7 +30,7 @@ class Speciality
     private $agents;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idSpeciality", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Mission::class, mappedBy="idSpeciality")
      */
     private $missions;
 
