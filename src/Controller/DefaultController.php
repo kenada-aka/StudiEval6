@@ -82,7 +82,7 @@ class DefaultController extends AbstractController
         $filters = ["codeName", "country", "state", "type"];
         $properties = ["title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality"];
         $pagination = $this->paginator->paginate(
-            $repository->findAllQuery(),
+            $repository->findAllWhereFinishQuery(),
             $request->query->getInt('page', 1), // page number
             3 // limit per page
         );

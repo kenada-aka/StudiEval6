@@ -25,6 +25,15 @@ class MissionRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
+    public function findAllWhereFinishQuery()
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.state = :val')
+            ->setParameter('val', "Terminé")
+            ->orderBy('a.startDate', 'DESC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Mission[] Returns an array of Mission objects
     //  */
