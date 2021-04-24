@@ -3,27 +3,39 @@
 
 namespace App\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;                         // Permet d'utiliser les routes sans "config/routes.yaml
 
-
 use Doctrine\ORM\EntityManagerInterface;
-//use Doctrine\Common\Persistence\ObjectManager;
 
+use Knp\Component\Pager\PaginatorInterface;
+
+
+use App\Entity\Mission;
+use App\Form\MissionType;
+use App\Repository\MissionRepository;
 
 
 class DefaultController extends AbstractController
 
 {
 
-    private $repository; 
     private $em;
 
-    private $adminRepository;
+    private $missionRepository;
 
-    public function __construct(EntityManagerInterface $em) {
+    private $paginator;
+
+    public function __construct(EntityManagerInterface $em,
+                                MissionRepository $missionRepository,
+                                PaginatorInterface $paginator)
+    {
         $this->em = $em;
+        $this->missionRepository = $missionRepository;;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -31,89 +43,68 @@ class DefaultController extends AbstractController
      * @Route("/", name="home")
 
      */
-    public function home()
+    public function home(Request $request)
     {
-
-        //$admins = $this->adminRepository->findAll();
-
-/*
-        $user = new User();
-        $user->setLastName("test");
-        $user->setFirstName("kenada");
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-*/
-        
-        
-
-        return $this->render('home/home.html.twig', [
-                        'title' => 'Accueil',
-                        
-                        
-                    ]);
-
-    }
-
-    /**
-     * @Route("/posts/{id}", name="admin.property.edit", methods="GET|POST")
-     * @param User $user
-     */
-/*
-    public function post(User $user, int $id, Request $request)
-
-    {
-        //dump($user);
-        //dump($id);
-        $form = $this->createForm(UserType::class,  $user);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-
-           
-           // $this->em->persist($user);
-            $this->em->flush();
-            
-        }
-
-       
-
-        return $this->render('edit.html.twig', [
-
-            'title' => 'Ma page de contact (edit)',
-            'form' => $form->createView()
-
-        ]);
-
-    }
-*/
-    
-
-     /**
-     * @Route("/posts/{id}", name="admin.property.delete", methods="DELETE")
-     * @param User $user
-     */
-/*
-    public function delete(User $user, Request $request)
-
-    {
-        //dump($request);
-        if($this->isCsrfTokenValid('delete'. $user->getId(), $request->get('_token')))
+        //$datas = ["agent" => "agents", "target" => "targets", "contact" => "contacts", "stash" => "stashs"];
+        $repository = $this->missionRepository;
+        $headers = [
+            "id" => "ID", 
+            "username" => "Identifiant", 
+            "password" => "Mot de passe", 
+            "roles" => "Roles", 
+            "lastname" => "Nom", 
+            "firstname" => "Prénom", 
+            "email" => "Email", 
+            "registrationDate" => "Date Inscription",
+            "birthDate" => "Date Naissance",
+            "nationality" => "Nationalité",
+            "codeName" => "Nom de code",
+            "codeId" => "Code ID",
+            "code" => "Code",
+            "adress" => "Adresse",
+            "country" => "Pays",
+            "type" => "Type",
+            "name" => "Nom",
+            "title" => "Titre",
+            "description" => "Description",
+            "startDate" => "Date début",
+            "endDate" => "Date fin",
+            "state" => "Statut",
+            "agents" => "Agent(s)",
+            "missions" => "Mission(s)",
+            "contacts" => "Contact(s)",
+            "targets" => "Cible(s)",
+            "specialities" => "Spécialité(s)",
+            "idSpeciality" => "Spécialité",
+            "idMission" => "Mission",
+            "idStash" => "Planque"
+        ];
+        $sortables = ["title", "country", "startDate", "endDate"];
+        $filters = ["codeName", "country", "state", "type"];
+        $properties = ["title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality"];
+        $pagination = $this->paginator->paginate(
+            $repository->findAllQuery(),
+            $request->query->getInt('page', 1), // page number
+            3 // limit per page
+        );
+        $pagination->setTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig');
+        $pagination->setSortableTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_font_awesome_sortable_link.html.twig');
+        $pagination->setFiltrationTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_filtration.html.twig');
+        $array = [
+            'title' => "Agence de surveillance : Secret Agency X",
+            'datas' => $pagination,
+            'headers' => $headers,
+            'sortables' => $sortables,
+            'filters' => $filters,
+            'properties' => $properties
+        ];
+        /*
+        foreach($datas as $k => $v)
         {
-            //$this->em = $this->getDoctrine()->getManager();
-            $this->em->remove($user);
-            $this->em->flush();
-
-
-            
+            $array[$v] = $repositories[$k]->findAll();
         }
-        
-        return $this->redirectToRoute('admin.property.home');
-        
-        
-
+        */
+        return $this->render('home/home.html.twig', $array);
     }
-*/
+
 }
