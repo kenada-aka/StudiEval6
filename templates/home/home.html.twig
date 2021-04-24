@@ -46,25 +46,12 @@
                                         {% elseif attribute(data, property).timestamp is defined %}
                                             {{ attribute(data, property)|date('d/m/Y') }}
                                         {% elseif attribute(data, property).id is defined %}
-                                            <ul class="list-group">
-                                                {% if attribute(data, property).className == "Speciality" %}
-                                                    <li class="list-group-item">{{ attribute(data, property).name }}</li>
-                                                {% elseif attribute(data, property).className == "Mission" %}
-                                                    <li class="list-group-item">{{ attribute(data, property).title }}</li>
-                                                {% elseif attribute(data, property).className == "Stash" %}
-                                                    <li class="list-group-item">{{ attribute(data, property).code }}</li>
-                                                {% endif %}
-                                            </ul>
-                                            <ul class="list-group">
+                                            {{ attribute(data, property).name }}
+                                        {% elseif property == "title" %}
+                                            <a href="{{ path('mission.specs', {idMission: data.id}) }}">{{ attribute(data, property) }}</a>
                                         {% else %}
-                                            {% if property == "idStash" %}
-                                                <!-- Stashs -->
-                                                
-                                            {% else %}
-                                                {{ attribute(data, property) }}
-                                            {% endif %}
+                                            {{ attribute(data, property) }}
                                         {% endif %}
-                                        
                                     </td>
                                 {% endfor %}
                             </tr>

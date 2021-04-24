@@ -45,7 +45,6 @@ class DefaultController extends AbstractController
      */
     public function home(Request $request)
     {
-        //$datas = ["agent" => "agents", "target" => "targets", "contact" => "contacts", "stash" => "stashs"];
         $repository = $this->missionRepository;
         $headers = [
             "id" => "ID", 
@@ -98,13 +97,22 @@ class DefaultController extends AbstractController
             'filters' => $filters,
             'properties' => $properties
         ];
-        /*
-        foreach($datas as $k => $v)
-        {
-            $array[$v] = $repositories[$k]->findAll();
-        }
-        */
         return $this->render('home/home.html.twig', $array);
+    }
+
+    /**
+
+     * @Route("/mission/{idMission}", name="mission.specs")
+
+     */
+    public function missionSpecs(int $idMission)
+    {
+        $mission = $this->missionRepository->find($idMission);
+        $array = [
+            'title' => "Mission spécifications : ". $mission->getTitle(),
+            'mission' => $mission,
+        ];
+        return $this->render('home/specs.html.twig', $array);
     }
 
 }

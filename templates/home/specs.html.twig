@@ -1,0 +1,56 @@
+{% extends "index.html.twig" %}
+
+{% block body %}
+
+<main id="main">
+    <section class="section">
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="card" style="width: 36rem;">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>{{ mission.title }}</strong></h5>
+                    <p class="card-text">{{ mission.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Pays : {{ mission.country }}</li>
+                    <li class="list-group-item">Spécialité : {{ mission.idSpeciality.name }}</li>
+                    <li class="list-group-item">Statut : {{ mission.state }}</li>
+                    <li class="list-group-item">Type : {{ mission.type }}</li>
+                    <li class="list-group-item">Planque : {% if mission.idStash.adress is defined %}{{ mission.idStash.adress }} {{ mission.idStash.country }}{% endif %}</li>
+                </ul>
+                {% if mission.agents|length != 0 %}
+                    <div class="card-body">
+                        <h5>Agents</h5>
+                        <ul class="align-middle">
+                            {% for agent in mission.agents %}
+                                <li>{{  agent.username }}</li> 
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if mission.targets|length != 0 %}
+                    <div class="card-body">
+                        <h5>Cibles</h5>
+                        <ul class="align-middle">
+                            {% for target in mission.targets %}
+                                <li>{{  target.username }}</li> 
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if mission.contacts|length != 0 %}
+                    <div class="card-body">
+                        <h5>Contacts</h5>
+                        <ul class="align-middle">
+                            {% for contact in mission.contacts %}
+                                <li>{{  contact.username }}</li> 
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="card-footer text-muted">Période : {{ mission.startDate|date('d/m/Y') }} au {{ mission.endDate|date('d/m/Y') }}</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
