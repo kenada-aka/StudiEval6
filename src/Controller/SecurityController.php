@@ -228,7 +228,6 @@ class SecurityController extends AbstractController
         $form = $this->form($formName, $request, null, $passwordEncoder, "add");
         if($request->getMethod() == "POST")
         {
-            dump($request);die();
             return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
         }
         return $this->render('admin/form.html.twig', [
@@ -271,31 +270,31 @@ class SecurityController extends AbstractController
         switch($formName)
         {
             case "Admin":
-                $entity = $id ? $this->adminRepository->find($id) : new Admin();
+                $entity = is_int($id) ? $this->adminRepository->find($id) : new Admin();
                 $form = $this->createForm(AdminType::class, $entity);
                 break;
             case "Contact":
-                $entity = $id ? $this->contactRepository->find($id) : new Contact();
+                $entity = is_int($id) ? $this->contactRepository->find($id) : new Contact();
                 $form = $this->createForm(ContactType::class, $entity);
                 break;
             case "Target":
-                $entity = $id ? $this->targetRepository->find($id) : new Target();
+                $entity = is_int($id) ? $this->targetRepository->find($id) : new Target();
                 $form = $this->createForm(TargetType::class, $entity);
                 break;
             case "Agent":
-                $entity = $id ? $this->agentRepository->find($id) : new Agent();
+                $entity = is_int($id) ? $this->agentRepository->find($id) : new Agent();
                 $form = $this->createForm(AgentType::class, $entity);
                 break;
             case "Mission":
-                $entity = $id ? $this->missionRepository->find($id) : new Mission();
+                $entity = is_int($id) ? $this->missionRepository->find($id) : new Mission();
                 $form = $this->createForm(MissionType::class, $entity);
                 break;
             case "Stash":
-                $entity = $id ? $this->stashRepository->find($id) : new Stash();
+                $entity = is_int($id) ? $this->stashRepository->find($id) : new Stash();
                 $form = $this->createForm(StashType::class, $entity);
                 break;
             case "Speciality":
-                $entity = $id ? $this->specialityRepository->find($id) : new Speciality();
+                $entity = is_int($id) ? $this->specialityRepository->find($id) : new Speciality();
                 $form = $this->createForm(SpecialityType::class, $entity);
                 break;
         }
@@ -370,14 +369,16 @@ class SecurityController extends AbstractController
 
             if($this->isCsrfTokenValid($csrfToken, $formToken))
             {
-                $this->em->remove($entity);
+                if($mode == "remove") $this->em->remove($entity);
+                else $this->em->persist($entity);
                 $this->em->flush();
             }
+            //dump($this->container->get('security.csrf.token_manager'));die();
         }
 
         return $form;
     }
-    
+
 
     /**
      * @Route("/admin/gestion/mission/addContact", name="admin.gestion.mission.addContact", methods="POST")
