@@ -10,6 +10,9 @@
                     <a href="{{ path('admin.add', {formName: formName}) }}" class="btn btn-primary mt-4">Ajouter un enregistrement</a>
                 </div>
                 {% if datas %}
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ knp_pagination_render(datas) }}
+                    </div>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -80,6 +83,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ knp_pagination_render(datas) }}
+                    </div>
                 {% else %}
                     <div class="alert alert-warning mt-4 text-center">Il n'y a pas d'enregistrement dans : <strong>{{ title }}</strong>.</div>
                 {% endif %}

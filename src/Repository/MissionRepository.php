@@ -19,6 +19,15 @@ class MissionRepository extends ServiceEntityRepository
         parent::__construct($registry, Mission::class);
     }
 
+    public function findAllQuery()
+    {
+        return $this->createQueryBuilder('a')
+            //->andWhere('a.id_owner = :val')
+            //->setParameter('val', $ownerId)
+            //->orderBy('a.id', 'ASC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Mission[] Returns an array of Mission objects
     //  */

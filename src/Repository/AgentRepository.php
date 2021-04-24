@@ -19,6 +19,15 @@ class AgentRepository extends ServiceEntityRepository
         parent::__construct($registry, Agent::class);
     }
 
+    public function findAllQuery()
+    {
+        return $this->createQueryBuilder('a')
+            //->andWhere('a.id_owner = :val')
+            //->setParameter('val', $ownerId)
+            //->orderBy('a.id', 'ASC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Agent[] Returns an array of Agent objects
     //  */

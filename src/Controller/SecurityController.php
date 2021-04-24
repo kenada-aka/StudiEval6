@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Admin;
@@ -57,6 +59,8 @@ class SecurityController extends AbstractController
     private $stashRepository;
     private $specialityRepository;
 
+    private $paginator;
+
     public function __construct(EntityManagerInterface $em, 
                                 AdminRepository $adminRepository,
                                 ContactRepository $contactRepository,
@@ -64,7 +68,8 @@ class SecurityController extends AbstractController
                                 AgentRepository $agentRepository,
                                 MissionRepository $missionRepository,
                                 StashRepository $stashRepository,
-                                SpecialityRepository $specialityRepository)
+                                SpecialityRepository $specialityRepository,
+                                PaginatorInterface $paginator)
     {
         $this->em = $em;
         $this->adminRepository = $adminRepository;
@@ -74,6 +79,7 @@ class SecurityController extends AbstractController
         $this->missionRepository = $missionRepository;
         $this->stashRepository = $stashRepository;
         $this->specialityRepository = $specialityRepository;
+        $this->paginator = $paginator;
     }
 
 
@@ -117,65 +123,65 @@ class SecurityController extends AbstractController
      * @Route("/admin/gestion/admin", name="admin.gestion.admin")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionAdmin()
+    public function gestionAdmin(Request $request)
     {
-        return $this->gestion("Gestion Admin", "Admin", "admin");
+        return $this->gestion($request, "Gestion Admin", "Admin", "admin");
     }
 
     /**
      * @Route("/admin/gestion/contact", name="admin.gestion.contact")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionContact()
+    public function gestionContact(Request $request)
     {
-        return $this->gestion("Gestion Contact", "Contact", "contact");
+        return $this->gestion($request, "Gestion Contact", "Contact", "contact");
     }
 
     /**
      * @Route("/admin/gestion/target", name="admin.gestion.target")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionTarget()
+    public function gestionTarget(Request $request)
     {
-        return $this->gestion("Gestion Target", "Target", "target");
+        return $this->gestion($request, "Gestion Target", "Target", "target");
     }
     /**
      * @Route("/admin/gestion/agent", name="admin.gestion.agent")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionAgent()
+    public function gestionAgent(Request $request)
     {
-        return $this->gestion("Gestion Agent", "Agent", "agent", ["speciality" => "specialities"]);
+        return $this->gestion($request, "Gestion Agent", "Agent", "agent", ["speciality" => "specialities"]);
     }
 
     /**
      * @Route("/admin/gestion/stash", name="admin.gestion.stash")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionStash()
+    public function gestionStash(Request $request)
     {
-        return $this->gestion("Gestion Stash", "Stash", "stash");
+        return $this->gestion($request, "Gestion Stash", "Stash", "stash");
     }
 
     /**
      * @Route("/admin/gestion/speciality", name="admin.gestion.speciality")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionSpeciality()
+    public function gestionSpeciality(Request $request)
     {
-        return $this->gestion("Gestion Speciality", "Speciality", "speciality", ["agent" => "agents"]);
+        return $this->gestion($request, "Gestion Speciality", "Speciality", "speciality", ["agent" => "agents"]);
     }
 
     /**
      * @Route("/admin/gestion/mission", name="admin.gestion.mission")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function gestionMission()
+    public function gestionMission(Request $request)
     {
-        return $this->gestion("Gestion Mission", "Mission", "mission", ["agent" => "agents", "target" => "targets", "contact" => "contacts", "stash" => "stashs"]);
+        return $this->gestion($request, "Gestion Mission", "Mission", "mission", ["agent" => "agents", "target" => "targets", "contact" => "contacts", "stash" => "stashs"]);
     }
 
-    private function gestion(string $title, string $formName, string $page, array $datas = [])
+    private function gestion(Request $request, string $title, string $formName, string $page, array $datas = [])
     {
         $repositories = [
             "admin" => $this->adminRepository,
@@ -204,10 +210,16 @@ class SecurityController extends AbstractController
             "speciality" => ["id", "name", "agents", "missions"],
             "mission" => ["id", "title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality", "agents", "contacts", "targets", "idStash"]
         ];
+        $pagination = $this->paginator->paginate(
+            $repositories[$page]->findAllQuery(),
+            $request->query->getInt('page', 1), // page number
+            3 // limit per page
+        );
+        $pagination->setTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig');
         $array = [
             'title' => $title,
             'formName' => $formName,
-            'datas' => $repositories[$page]->findAll(),
+            'datas' => $pagination,
             'headers' => $headers[$page],
             'properties' => $properties[$page]
         ];

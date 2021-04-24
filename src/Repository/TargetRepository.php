@@ -19,6 +19,15 @@ class TargetRepository extends ServiceEntityRepository
         parent::__construct($registry, Target::class);
     }
 
+    public function findAllQuery()
+    {
+        return $this->createQueryBuilder('a')
+            //->andWhere('a.id_owner = :val')
+            //->setParameter('val', $ownerId)
+            //->orderBy('a.id', 'ASC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Target[] Returns an array of Target objects
     //  */

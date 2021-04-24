@@ -19,6 +19,15 @@ class StashRepository extends ServiceEntityRepository
         parent::__construct($registry, Stash::class);
     }
 
+    public function findAllQuery()
+    {
+        return $this->createQueryBuilder('a')
+            //->andWhere('a.id_owner = :val')
+            //->setParameter('val', $ownerId)
+            //->orderBy('a.id', 'ASC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Stash[] Returns an array of Stash objects
     //  */
