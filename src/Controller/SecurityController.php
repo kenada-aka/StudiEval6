@@ -225,19 +225,28 @@ class SecurityController extends AbstractController
             "idStash" => "Planque"
         ];
         $sortables = [
-            "admin" => ["username", "lastName", "registrationDate"],
-            "contact" => ["username", "lastName", "birthDate", "nationality", "codeName"],
-            "target" => ["username", "lastName", "birthDate", "nationality", "codeName"],
-            "agent" => ["username", "lastName", "birthDate", "nationality", "codeId"],
+            "admin" => ["username", "lastname", "registrationDate"],
+            "contact" => ["username", "lastname", "birthDate", "nationality", "codeName"],
+            "target" => ["username", "lastname", "birthDate", "nationality", "codeName"],
+            "agent" => ["username", "lastname", "birthDate", "codeId"],
             "stash" => ["code", "country", "type"],
             "speciality" => ["name"],
             "mission" => ["title", "codeName", "country", "startDate", "endDate", "state", "type"]
         ];
+        $filters = [
+            "admin" => [],
+            "contact" => [],
+            "target" => [],
+            "agent" => ["nationality"],
+            "stash" => [],
+            "speciality" => [],
+            "mission" => []
+        ];
         $properties = [
-            "admin" => ["id", "username", "id", "roles", "lastName", "firstName", "email", "registrationDate"],
-            "contact" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"],
-            "target" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeName", "idMission"],
-            "agent" => ["id", "username", "id", "roles", "lastName", "firstName", "birthDate", "nationality", "codeId", "specialities", "idMission"],
+            "admin" => ["id", "username", "roles", "lastname", "firstname", "email", "registrationDate"],
+            "contact" => ["id", "username", "roles", "lastname", "firstname", "birthDate", "nationality", "codeName", "idMission"],
+            "target" => ["id", "username", "roles", "lastname", "firstname", "birthDate", "nationality", "codeName", "idMission"],
+            "agent" => ["id", "username", "roles", "lastname", "firstname", "birthDate", "nationality", "codeId", "specialities", "idMission"],
             "stash" => ["id", "code", "adress", "country", "type", "idMission"],
             "speciality" => ["id", "name", "agents", "missions"],
             "mission" => ["id", "title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality", "agents", "contacts", "targets", "idStash"]
@@ -248,12 +257,15 @@ class SecurityController extends AbstractController
             3 // limit per page
         );
         $pagination->setTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig');
+        $pagination->setSortableTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_font_awesome_sortable_link.html.twig');
+        $pagination->setFiltrationTemplate('@KnpPaginator/Pagination/twitter_bootstrap_v4_filtration.html.twig');
         $array = [
             'title' => $title,
             'formName' => $formName,
             'datas' => $pagination,
             'headers' => $headers,
             'sortables' => $sortables[$page],
+            'filters' => $filters[$page],
             'properties' => $properties[$page]
         ];
         foreach($datas as $k => $v)
