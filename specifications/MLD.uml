@@ -1,0 +1,10 @@
+User(#id:integer, lastname:varchar, firstname:varchar, username:varchar, password:varchar, roles:json) avec User AND (Admin OR Guest)
+Admin(#id:integer, #idUser=>User, email:varchar, registrationDate:Datetime)
+Guest(#id:integer, #idUser=>User, birthDate:char, nationality:varchar) avec Guest AND (Contact OR Target OR Agent)
+Contact(#id:integer, #idGuest=>Guest, codeName:varchar, #idMission=>Mission)
+Target(#id:integer, #idGuest=>Guest, codeName:varchar, #idMission=>Mission)
+Agent(#id:integer, #idGuest=>Guest, codeId:char, #idMission=>Mission)
+Speciality(#id:integer, name:varchar)
+Agent_Speciality(#id:integer, #idAgent=>Agent, #idSpeciality=>Speciality)
+Stash(#id:integer, code:char, adress:varchar, country:varchar, type:varchar, idMission=>Mission)
+Mission(#id:integer, title:varchar, description:text, codeName:varchar, country:varchar, startDate:Datetime, endDate:Datetime, state:varchar, type:varchar, #idSpeciality=>Speciality) avec Speciality NOT NULL
