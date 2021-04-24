@@ -63,7 +63,7 @@ class Mission
 
 
     /**
-     * @ORM\ManyToOne(targetEntity=Speciality::class)
+     * @ORM\ManyToOne(targetEntity=Speciality::class, inversedBy="missions")
      */
     private $idSpeciality;
 

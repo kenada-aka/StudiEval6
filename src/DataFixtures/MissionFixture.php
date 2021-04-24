@@ -143,7 +143,7 @@ class MissionFixture extends Fixture
 
         // Missions
 
-        for($i = 0; $i < 100; $i++)
+        for($i = 0; $i < 30; $i++)
         {
             $missions[$i] = new Mission();
             $missions[$i]
@@ -153,8 +153,8 @@ class MissionFixture extends Fixture
                 ->setCountry($faker->country)
                 ->setStartDate($faker->dateTimeBetween('-30 years', 'now', null))
                 ->setEndDate($faker->dateTimeBetween('-30 years', 'now', null))
-                ->setState($faker->randomElement($countries))
-                ->setType($faker->randomElement(["En préparation", "En cours", "Terminé", "Echec"]))
+                ->setState($faker->randomElement(["En préparation", "En cours", "Terminé", "Echec"]))
+                ->setType($faker->words(3, true))
                 ->setIdSpeciality($specialities[$i % 3]);
             
             $manager->persist($missions[$i]);

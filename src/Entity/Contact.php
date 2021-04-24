@@ -16,7 +16,7 @@ class Contact extends Guest
     private $codeName;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idContact")
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="contacts")
      */
     private $idMission;
 

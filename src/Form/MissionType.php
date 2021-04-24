@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
 use App\Entity\Speciality;
+use App\Entity\Agent;
 
 class MissionType extends AbstractType
 {
@@ -54,10 +55,10 @@ class MissionType extends AbstractType
                     "Surveillance" => "Surveillance",
                     "Infiltration" => "Infiltration"
                 ]])
-            //->add('idAgent', EntityType::class, ['class' => Agent::class, 'choice_label' => 'username'])
             ->add('idSpeciality', EntityType::class, ['class' => Speciality::class, 'choice_label' => 'name']) 
+            //->add('agents', EntityType::class, ['class' => Agent::class, 'choice_label' => 'username'])
             /*
-            ->add('idAgent', CollectionType::class, array(
+            ->add('agents', CollectionType::class, array(
                 'entry_type'   => EntityType::class,
                 'entry_options'  => array(
                     'class'      => Agent::class,
@@ -66,14 +67,21 @@ class MissionType extends AbstractType
             ))
             */
 /*
-            ->add('idAgent', EntityType::class, [
+            ->add('agents', CollectionType::class, [
+                'entry_type' => AgentType::class,
+                'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
+            'by_reference' => false,*/
+                /*
                 'class' => Agent::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.username', 'ASC');
                 },
                 'choice_label' => 'username',
-            ])*/
+            */
+            //])
             //->add('idSpeciality')
         ;
     }

@@ -55,7 +55,13 @@
                                                     {% include 'elements/addRelation.html.twig' with {'data': data, 'property' : property, 'options' : agents, 'childProperty' : "codeId", "path": "admin.gestion.mission.addAgent"} %}
                                                 {% elseif property == "missions" %}
                                                     <!-- Missions -->
-                                                    addMissionsForm
+                                                    {% if attribute(data, property)|length != 0 %}
+                                                        <ul class="list-group">
+                                                            {% for child in attribute(data, property) %}
+                                                                <li class="list-group-item">{{ attribute(child, "codeName") }}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endif %}
                                                 {% else %}
                                                     {{ attribute(data, property)|join(', ') }}
                                                 {% endif %}

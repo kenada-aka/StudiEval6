@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 
 use App\Entity\Admin;
 use App\Form\AdminType;
@@ -215,7 +216,7 @@ class SecurityController extends AbstractController
             "startDate" => "Date début",
             "endDate" => "Date fin",
             "state" => "Statut",
-            "agents" => "Agent",
+            "agents" => "Agent(s)",
             "missions" => "Mission(s)",
             "contacts" => "Contact(s)",
             "targets" => "Cible(s)",
@@ -226,21 +227,21 @@ class SecurityController extends AbstractController
         ];
         $sortables = [
             "admin" => ["username", "lastname", "registrationDate"],
-            "contact" => ["username", "lastname", "birthDate", "nationality", "codeName"],
-            "target" => ["username", "lastname", "birthDate", "nationality", "codeName"],
-            "agent" => ["username", "lastname", "birthDate", "codeId"],
-            "stash" => ["code", "country", "type"],
+            "contact" => ["username", "lastname", "birthDate", "nationality"],
+            "target" => ["username", "lastname", "birthDate", "nationality"],
+            "agent" => ["username", "lastname", "birthDate", "nationality"],
+            "stash" => ["country", "type"],
             "speciality" => ["name"],
-            "mission" => ["title", "codeName", "country", "startDate", "endDate", "state", "type"]
+            "mission" => ["title", "country", "startDate", "endDate"]
         ];
         $filters = [
-            "admin" => [],
-            "contact" => [],
-            "target" => [],
-            "agent" => ["nationality"],
-            "stash" => [],
+            "admin" => ["registrationDate"],
+            "contact" => ["nationality", "codeName"],
+            "target" => ["nationality", "codeName"],
+            "agent" => ["nationality", "codeId"],
+            "stash" => ["code", "country"],
             "speciality" => [],
-            "mission" => []
+            "mission" => ["codeName", "country", "state", "type"]
         ];
         $properties = [
             "admin" => ["id", "username", "roles", "lastname", "firstname", "email", "registrationDate"],
@@ -248,7 +249,7 @@ class SecurityController extends AbstractController
             "target" => ["id", "username", "roles", "lastname", "firstname", "birthDate", "nationality", "codeName", "idMission"],
             "agent" => ["id", "username", "roles", "lastname", "firstname", "birthDate", "nationality", "codeId", "specialities", "idMission"],
             "stash" => ["id", "code", "adress", "country", "type", "idMission"],
-            "speciality" => ["id", "name", "agents", "missions"],
+            "speciality" => ["id", "name"],
             "mission" => ["id", "title", "description", "codeName", "country", "startDate", "endDate", "state", "type", "idSpeciality", "agents", "contacts", "targets", "idStash"]
         ];
         $pagination = $this->paginator->paginate(
@@ -501,6 +502,41 @@ class SecurityController extends AbstractController
                 }
             }
 
+            // Règles métiers pour Mission
+
+            switch($many)
+            {
+                case "contact":
+                    if($entity->getNationality() != $mission->getCountry())
+                    {
+                        return new JsonResponse(['statut' => "ng", "error" => "Le contact doit obligatoirement être de la même nationalité que le pays de la mission !"]);
+                    }
+                    break;
+                case "agent":
+                    $targets = $mission->getTargets();
+                    $nationalities = $this->checkNationality($targets);
+                    if(in_array($entity->getNationality(), $nationalities))
+                    {
+                        return new JsonResponse(['statut' => "ng", "error" => "L'agent ne peut pas avoir la même nationnalité que les ou les cibles !"]);
+                    }
+                    
+                case "target":
+                    $agents = $mission->getAgents();
+                    $nationalities = $this->checkNationality($agents);
+                    if(in_array($entity->getNationality(), $nationalities))
+                    {
+                        return new JsonResponse(['statut' => "ng", "error" => "La cible ne peut pas avoir la même nationnalité que les ou les agents !"]);
+                    }
+                    break;
+                case "stash":
+                    if($entity->getCountry() != $mission->getCountry())
+                    {
+                        return new JsonResponse(['statut' => "ng", "error" => "La planque doit obligatoirement être de le même pays que la mission !"]);
+                    }
+                    return new JsonResponse(['statut' => "ng", "error" => $entity->getNationality()]);
+                    break;
+            }
+
             $entity->setIdMission($mission);
                 
             $this->em->persist($entity);
@@ -516,6 +552,20 @@ class SecurityController extends AbstractController
             
             return new JsonResponse(['statut' => "ok", 'text' => $response]);
         }
+    }
+
+    private function checkNationality(PersistentCollection $entities)
+    {
+        $nationalities = [];
+        if(count($entities) != 0)
+        {
+            foreach($entities as $entity)
+            {
+                $nationalities[] = $entity->getNationality();
+            }
+            $nationalities = array_unique($nationalities);
+        }
+        return $nationalities;
     }
 
 

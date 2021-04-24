@@ -13,7 +13,7 @@ class Target extends Guest
     
 
     /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idTarget")
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="targets")
      */
     private $idMission;
 

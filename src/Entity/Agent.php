@@ -23,7 +23,7 @@ class Agent extends Guest
     private $specialities;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="idAgent")
+     * @ORM\ManyToOne(targetEntity=Mission::class, inversedBy="agents")
      */
     private $idMission;
 
