@@ -605,6 +605,8 @@ class SecurityController extends AbstractController
 
             ->setEmail("admin@test.com")
             ->setRegistrationDate(new \DateTime());
+        $this->em->persist($admin);
+        $this->em->flush();
         return $this->render('index.html.twig');
     }
 
