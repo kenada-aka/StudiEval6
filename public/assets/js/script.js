@@ -33,6 +33,31 @@ $(document).ready(function() {
     });
 });
 
+// XHR pour gérer les suppressions
+
+$('button.remove').each(function(index) {
+    this.addEventListener('click', function(event) {
+        event.preventDefault();
+        let node = this.parentNode.parentNode.parentNode.parentNode;
+        let parent = node.parentNode;
+        $.ajax({
+            method: "DELETE",
+            url: this.form.action,
+            data:{'_token': this.form._token.value}
+        }).done(function(json) {
+            if(json.statut === "ok")
+            {
+                parent.removeChild(node);                                  
+            }
+            else
+            {
+                $('.modal-body').html(json.error);
+                $('#Modal').modal('show'); 
+            }
+        });
+    });
+});
+
 // XHR pour gérer les relations
 
 $('button.xhr').each(function(index) {

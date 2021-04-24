@@ -89,7 +89,7 @@
                                             <form method="POST" action="{{ path('admin.remove', {formName: formName, id: data.id}) }}">
                                                 <input type="hidden" name="_method" value="DELETE"/>
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ data.id)}}"/>
-                                                <button class="btn btn-danger" style="border-top-left-radius:0;border-bottom-left-radius:0;">Supprimer</button>
+                                                <button class="btn btn-danger remove" style="border-top-left-radius:0;border-bottom-left-radius:0;">Supprimer</button>
                                             </form>
                                         </div>
                                     </td>

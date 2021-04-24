@@ -318,8 +318,12 @@ class SecurityController extends AbstractController
      */
     public function remove(string $formName, int $id, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $form = $this->form($formName, $request, $id, $passwordEncoder, "remove");
-        return $this->redirectToRoute('admin.gestion.'. strtolower($formName));
+        if($request->isXmlHttpRequest())
+        {
+            $form = $this->form($formName, $request, $id, $passwordEncoder, "remove");
+            return new JsonResponse(['statut' => "ok"]);
+        }   
+        return new JsonResponse(['statut' => "ng", "error" => "Désolé l'enregistrement n'est pas supprimé !"]);
     }
 
     private function form(string $formName, Request $request, ?int $id, UserPasswordEncoderInterface $passwordEncoder, string $mode)
