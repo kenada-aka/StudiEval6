@@ -193,13 +193,45 @@ class SecurityController extends AbstractController
             "mission" => $this->missionRepository
         ];
         $headers = [
-            "admin" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Email", "Date Inscription"],
-            "contact" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"],
-            "target" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Nom de code", "Mission (ManyToOne)"],
-            "agent" => ["ID", "Identifiant", "Mot de passe", "Roles", "Nom", "Prénom", "Date Naissance", "Nationalité", "Code ID", "Spécialité(s) (ManyToMany)", "Mission (ManyToOne)"],
-            "stash" => ["ID", "Code", "Adresse", "Pays", "Type", "Mission (OneToOne)"],
-            "speciality" => ["ID", "Nom", "Agent (ManyToMany)", "Mission (ManyToOne)"],
-            "mission" => ["ID", "Titre", "Description", "Nom de code", "Pays", "Date début", "Date fin", "Statut", "Type", "Spécialité (OneToOne)", "Agent(s) (OneToMany)", "Contact(s) (OneToMany)", "Cible(s) (OneToMany)", "Planque(s) (OneToOne)"]
+            "id" => "ID", 
+            "username" => "Identifiant", 
+            "password" => "Mot de passe", 
+            "roles" => "Roles", 
+            "lastname" => "Nom", 
+            "firstname" => "Prénom", 
+            "email" => "Email", 
+            "registrationDate" => "Date Inscription",
+            "birthDate" => "Date Naissance",
+            "nationality" => "Nationalité",
+            "codeName" => "Nom de code",
+            "codeId" => "Code ID",
+            "code" => "Code",
+            "adress" => "Adresse",
+            "country" => "Pays",
+            "type" => "Type",
+            "name" => "Nom",
+            "title" => "Titre",
+            "description" => "Description",
+            "startDate" => "Date début",
+            "endDate" => "Date fin",
+            "state" => "Statut",
+            "agents" => "Agent",
+            "missions" => "Mission(s)",
+            "contacts" => "Contact(s)",
+            "targets" => "Cible(s)",
+            "specialities" => "Spécialité(s)",
+            "idSpeciality" => "Spécialité",
+            "idMission" => "Mission",
+            "idStash" => "Planque"
+        ];
+        $sortables = [
+            "admin" => ["username", "lastName", "registrationDate"],
+            "contact" => ["username", "lastName", "birthDate", "nationality", "codeName"],
+            "target" => ["username", "lastName", "birthDate", "nationality", "codeName"],
+            "agent" => ["username", "lastName", "birthDate", "nationality", "codeId"],
+            "stash" => ["code", "country", "type"],
+            "speciality" => ["name"],
+            "mission" => ["title", "codeName", "country", "startDate", "endDate", "state", "type"]
         ];
         $properties = [
             "admin" => ["id", "username", "id", "roles", "lastName", "firstName", "email", "registrationDate"],
@@ -220,7 +252,8 @@ class SecurityController extends AbstractController
             'title' => $title,
             'formName' => $formName,
             'datas' => $pagination,
-            'headers' => $headers[$page],
+            'headers' => $headers,
+            'sortables' => $sortables[$page],
             'properties' => $properties[$page]
         ];
         foreach($datas as $k => $v)

@@ -16,8 +16,12 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                {% for header in headers %}
-                                    <th class="text-center">{{ header }}</th>
+                                {% for property in properties %}
+                                    {% if property in sortables %}
+                                        <th class="text-center">{{ knp_pagination_sortable(datas, headers[property], 'a.'~ property) }}</th>
+                                    {% else %}
+                                        <th class="text-center">{{ headers[property] }}</th>
+                                    {% endif %}
                                 {% endfor %}
                                 <th class="text-center" style="width:200px;">Actions</th>
                             </tr>
