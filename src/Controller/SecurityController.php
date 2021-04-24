@@ -590,4 +590,22 @@ class SecurityController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/dev/fixtures", name="admin.fixtures")
+     */
+    public function devFixtures(UserPasswordEncoderInterface $encoder)
+    {
+        $admin = new Admin();
+        $admin
+            ->setUsername("Admin")
+            ->setRoles(array("ROLE_ADMIN"))
+            ->setPassword($encoder->encodePassword($admin, "123"))
+            ->setLastname("Azzougui")
+            ->setFirstname("David")
+
+            ->setEmail("admin@test.com")
+            ->setRegistrationDate(new \DateTime());
+        return $this->render('index.html.twig');
+    }
+
 }
