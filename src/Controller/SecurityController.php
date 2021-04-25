@@ -593,6 +593,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/dev/fixtures", name="admin.fixtures")
      */
+    /*
     public function devFixtures(UserPasswordEncoderInterface $encoder)
     {
         $admin = new Admin();
@@ -609,5 +610,6 @@ class SecurityController extends AbstractController
         $this->em->flush();
         return $this->render('index.html.twig');
     }
+    */
 
 }
