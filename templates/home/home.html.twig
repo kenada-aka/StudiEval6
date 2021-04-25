@@ -5,7 +5,7 @@
 <main id="main">
     <section class="section">
         <div class="container mt-4">
-            {% if datas|length != 0 %}
+            {% if datas is defined and datas|length != 0 %}
                 <div class="d-flex justify-content-center mt-3">
                     {{ knp_pagination_render(datas) }}
                 </div>
