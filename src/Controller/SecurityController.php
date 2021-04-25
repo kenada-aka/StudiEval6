@@ -579,6 +579,18 @@ class SecurityController extends AbstractController
         {
             $agent = $this->agentRepository->find($request->request->get('idOne'));
             $speciality = $this->specialityRepository->find($request->request->get('idMany'));
+            
+            // Vérifier que la spécialité n'est pas déjà dans la liste
+
+            $specialities = $agent->getSpecialities();
+            foreach($specialities as $s)
+            {
+                if($s->getName() == $speciality->getName())
+                {
+                    return new JsonResponse(['statut' => "ng", 'text' => "L'agent dispose déjà de cette spécialité !"]);
+                }
+            }
+
             $agent->addSpecialities($speciality);
             
             $this->em->persist($agent);
