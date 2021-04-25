@@ -587,7 +587,7 @@ class SecurityController extends AbstractController
             {
                 if($s->getName() == $speciality->getName())
                 {
-                    return new JsonResponse(['statut' => "ng", 'text' => "L'agent dispose déjà de cette spécialité !"]);
+                    return new JsonResponse(['statut' => "ng", 'error' => "L'agent dispose déjà de cette spécialité !"]);
                 }
             }
 
