@@ -533,7 +533,6 @@ class SecurityController extends AbstractController
                     {
                         return new JsonResponse(['statut' => "ng", "error" => "La planque doit obligatoirement être de le même pays que la mission !"]);
                     }
-                    return new JsonResponse(['statut' => "ng", "error" => $entity->getNationality()]);
                     break;
             }
 
